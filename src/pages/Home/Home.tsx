@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { tcgdex } from "../api/api";
+import { tcgdex } from "../../api/api";
 import type { Card } from "@tcgdex/sdk";
 
 const Home = () => {
@@ -22,7 +22,7 @@ const Home = () => {
 
   return (
     <>
-    <img src={`${card?.image}/high.png`} />
+    {/* <img className="w-1/2"src={`${card?.image}/high.png`} /> */}
     </>
   )
 }
