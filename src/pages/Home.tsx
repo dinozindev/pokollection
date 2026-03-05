@@ -1,50 +1,28 @@
 import { useEffect, useState } from "react";
-import client from "../api/api";
-import type { Set } from "../types/type";
-
-type CardImages = {
-  small: string;
-  large: string;
-}
-
-type CardResponse = {
-  id: string;
-  name: string;
-  supertype: string;
-  subtypes: string[];
-  level?: string;
-  hp: string;
-  types: string[];
-  set: Set;
-  number: string;
-  artist: string;
-  rarity: string;
-  nationalPokedexNumbers: number[];
-  images: CardImages;
-}
+import { tcgdex } from "../api/api";
+import type { Card } from "@tcgdex/sdk";
 
 const Home = () => {
-
-  const [card, setCard] = useState<CardResponse>();
+  
+  const [card, setCard] = useState<Card | null>(null);
 
   const fetchCard = async () => {
     try {
-      const response = await client.get<{ data: CardResponse }>("/cards/xy1-1");
-      setCard(response.data.data);
-      console.log(response.data.data);
+      const card = await tcgdex.card.get('swsh3-136');
+      setCard(card);
+      console.log(card)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
   useEffect(() => {
-    fetchCard();
+    fetchCard()
   }, [])
 
   return (
     <>
-      <p>{card?.id}</p>
-      <img src={card?.images.large} />
+    <img src={`${card?.image}/high.png`} />
     </>
   )
 }
