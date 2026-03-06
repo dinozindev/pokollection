@@ -8,7 +8,7 @@ const Home = () => {
 
   const fetchCard = async () => {
     try {
-      const card = await tcgdex.card.get('swsh3-136');
+      const card = await tcgdex.card.get('2018sm-4');
       setCard(card);
       console.log(card)
     } catch (error) {
@@ -22,7 +22,7 @@ const Home = () => {
 
   return (
     <>
-    {/* <img className="w-1/2"src={`${card?.image}/high.png`} /> */}
+    <img className="w-1/2"src={`${card?.image}/high.png`} /> 
     </>
   )
 }
