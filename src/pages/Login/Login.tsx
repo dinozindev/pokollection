@@ -4,7 +4,7 @@ const Login = () => {
   return (
     <section className="flex flex-col justify-center items-center h-screen">
       <h2 className="text-3xl">Login</h2>
-      <form className="flex flex-col py-8 gap-3">
+      <form className="flex flex-col py-8 gap-3 w-2/3">
         <label htmlFor="input__email">Email</label>
         <input id="input__email" className="border-1 rounded-xl px-2 py-1" type="text" />
         <label htmlFor="input__senha">Senha</label>
