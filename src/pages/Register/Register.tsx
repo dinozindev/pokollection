@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import type { User } from "../../types/type";
 import * as firebase from "firebase/auth";
 import { auth } from "../../firebase/firebase";
@@ -11,7 +11,6 @@ const Register = () => {
         password: "",
         username: ""
     });
-    const [firebaseUser, setFirebaseUser] = useState<firebase.User | null>();
     const [error, setError] = useState<boolean>(false);
     const navigate = useNavigate();
 
@@ -32,13 +31,6 @@ const Register = () => {
             setError(true);
         }
     };
-
-    useEffect(() => {
-        const subscriber = firebase.onAuthStateChanged(auth, (user) => {
-            setFirebaseUser(user);
-        });
-        return subscriber;
-    }, []);
 
     return (
         <section className="flex flex-col justify-center items-center h-screen">

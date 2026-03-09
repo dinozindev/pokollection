@@ -1,12 +1,21 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import * as firebase from "firebase/auth";
+import { auth } from "../firebase/firebase";
 
 const Header = () => {
+
+    const { user } = useContext(AuthContext);
 
     const [menu, setMenu] = useState<boolean>(false);
 
     const toggleMenu = () => {
         setMenu(!menu);
+    }
+
+    const doSignOut = () => {
+        firebase.signOut(auth);
     }
 
     return (
@@ -26,11 +35,13 @@ const Header = () => {
                 <Link to="/cards">Cards</Link>
                 <Link to="/perfil">Perfil</Link>
                 <Link to="/colecao">Coleção</Link>
-                <Link to="/login">
-                    <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-white transition-all">
-                        Login
-                    </div>
-                </Link>
+                {user ? <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-white transition-all" onClick={() => doSignOut()}>
+                    Logout
+                </div>
+                    : <Link to="/login">
+                        <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-white transition-all">
+                            Login
+                        </div></Link>}
             </div>
         </header>
     )

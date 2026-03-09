@@ -5,18 +5,21 @@ import Cards from "./pages/Cards/Cards"
 import Footer from "./components/Footer"
 import Login from "./pages/Login/Login"
 import Register from "./pages/Register/Register"
+import { AuthProvider } from "./context/AuthContext"
 
 const App = () => {
   return (
     <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/cards" element={<Cards />} />
-        <Route path="/login" element={<Login />}/>
-        <Route path="/register" element={<Register />} />
-      </Routes>
-      <Footer />
+      <AuthProvider>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cards" element={<Cards />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+        <Footer />
+      </AuthProvider>
     </>
   )
 }
