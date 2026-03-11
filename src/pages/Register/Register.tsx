@@ -1,8 +1,9 @@
 import { useState } from "react"
 import type { User } from "../../types/type";
 import * as firebase from "firebase/auth";
-import { auth } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
+import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
 
@@ -23,9 +24,17 @@ const Register = () => {
                 user.email,
                 user.password
             );
+            
+            await setDoc(doc(db, "users", response.user.uid), {
+                username: user.username,
+                email: user.email,
+                favoritePokemon: ""
+            })
+
             console.log(response.user);
             setError(false);
             navigate("/cards");
+
         } catch (error) {
             console.error(error);
             setError(true);
