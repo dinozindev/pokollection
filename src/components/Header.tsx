@@ -33,7 +33,7 @@ const Header = () => {
   ${menu ? "translate-x-0" : "translate-x-full"}`}
             >
                 <Link to="/cards">Cards</Link>
-                <Link to="/perfil">Perfil</Link>
+                <Link to="/profile">Perfil</Link>
                 <Link to="/colecao">Coleção</Link>
                 {user ? <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-white transition-all" onClick={() => doSignOut()}>
                     Logout

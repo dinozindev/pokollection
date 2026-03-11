@@ -6,6 +6,7 @@ import Footer from "./components/Footer"
 import Login from "./pages/Login/Login"
 import Register from "./pages/Register/Register"
 import { AuthProvider } from "./context/AuthContext"
+import Profile from "./pages/Profile/Profile"
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="/cards" element={<Cards />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         <Footer />
       </AuthProvider>
