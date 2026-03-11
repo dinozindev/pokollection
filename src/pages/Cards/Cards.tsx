@@ -5,7 +5,7 @@ import { tcgdex } from "../../api/api";
 import placeholder from "../../assets/card-placeholder.png";
 import Filter from "../../components/Filter";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, doc, getDocs, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 
 const Cards = () => {
@@ -40,9 +40,12 @@ const Cards = () => {
         await setDoc(
             cardRef,
             {
-                cardId: card.id,
+                id: card.id,
                 name: card.name,
                 image: card.image ?? "",
+                illustrator: card.illustrator,
+                localId: card.localId,
+                set: card.set,
                 quantity: increment(1)
             },
             { merge: true }
@@ -55,9 +58,19 @@ const Cards = () => {
 
         const cardRef = doc(db, "users", user.uid, "cards", card.id);
 
-        await updateDoc(cardRef, {
-            quantity: increment(-1)
-        });
+        const snapshot = await getDoc(cardRef);
+
+        if (!snapshot.exists()) return;
+
+        const data = snapshot.data();
+
+        if (data.quantity <= 1) {
+            await deleteDoc(cardRef);
+        } else {
+            await updateDoc(cardRef, {
+                quantity: increment(-1)
+            });
+        }
     };
 
     const handleSubmit = (e: any) => {
@@ -85,7 +98,7 @@ const Cards = () => {
     }, [user]);
 
     return (
-        <section className="flex items-center pt-30 flex-col">
+        <section className="flex items-center pt-30 flex-col min-h-screen">
             <div className="flex items-center pb-10 gap-3">
                 <SearchBar
                     value={search}
@@ -95,7 +108,7 @@ const Cards = () => {
                 <Filter />
             </div>
             <div className="flex flex-wrap justify-center gap-6">
-                {cards?.map(card => (
+                {cards.length !== 0 ? cards.map(card => (
                     <div className="w-2/5 flex flex-col gap-1.5 justify-between bg-gray-100 px-2 py-4 rounded-md" key={card.id}>
                         {card.image ? (
                             <img src={`${card.image}/high.png`} />
@@ -119,7 +132,7 @@ const Cards = () => {
                             ></i>
                         </div>
                     </div>
-                ))}
+                )) : <p>Nenhuma carta encontrada.</p>}
             </div>
         </section>
     )

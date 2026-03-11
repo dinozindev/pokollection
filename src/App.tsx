@@ -7,6 +7,7 @@ import Login from "./pages/Login/Login"
 import Register from "./pages/Register/Register"
 import { AuthProvider } from "./context/AuthContext"
 import Profile from "./pages/Profile/Profile"
+import Collection from "./pages/Collection/Collection"
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/collection" element={<Collection />} />
         </Routes>
         <Footer />
       </AuthProvider>
