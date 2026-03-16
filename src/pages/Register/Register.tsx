@@ -28,7 +28,8 @@ const Register = () => {
             await setDoc(doc(db, "users", response.user.uid), {
                 username: user.username,
                 email: user.email,
-                favoritePokemon: ""
+                favoritePokemon: "",
+                userAvatar: ""
             })
 
             console.log(response.user);

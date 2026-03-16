@@ -15,6 +15,7 @@ const Cards = () => {
     const [cards, setCards] = useState<Card[]>([]);
     const [userCards, setUserCards] = useState<Record<string, number>>({});
     const [search, setSearch] = useState<string>('Pikachu');
+    const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
     const fetchCards = async () => {
         try {
@@ -43,7 +44,7 @@ const Cards = () => {
                 id: card.id,
                 name: card.name,
                 image: card.image ?? "",
-                illustrator: card.illustrator,
+                illustrator: card.illustrator ?? "",
                 localId: card.localId,
                 set: card.set,
                 quantity: increment(1)
@@ -71,6 +72,13 @@ const Cards = () => {
                 quantity: increment(-1)
             });
         }
+    };
+
+    const handleImageLoad = (id: string) => {
+        setLoadedImages((prev) => ({
+            ...prev,
+            [id]: true
+        }));
     };
 
     const handleSubmit = (e: any) => {
@@ -110,11 +118,21 @@ const Cards = () => {
             <div className="flex flex-wrap justify-center gap-6">
                 {cards.length !== 0 ? cards.map(card => (
                     <div className="w-2/5 flex flex-col gap-1.5 justify-between bg-gray-100 px-2 py-4 rounded-md" key={card.id}>
-                        {card.image ? (
-                            <img src={`${card.image}/high.png`} />
-                        ) : (
-                            <img className="w-full" src={placeholder} alt={card.name} />
-                        )}
+                        <div className="relative">
+
+                            {!loadedImages[card.id] && (
+                                <div className="absolute inset-0 rounded-md overflow-hidden bg-gray-300">
+                                    <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300"></div>
+                                </div>
+                            )}
+
+                            <img
+                                src={card.image ? `${card.image}/high.png` : placeholder}
+                                onLoad={() => handleImageLoad(card.id)}
+                                className={`w-full transition-opacity duration-300 ${loadedImages[card.id] ? "opacity-100" : "opacity-0"
+                                    }`}
+                            />
+                        </div>
                         <h3>{card.name}</h3>
                         <p className="text-sm">{card.set.name}</p>
                         <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
