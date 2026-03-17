@@ -8,6 +8,7 @@ import Register from "./pages/Register/Register"
 import { AuthProvider } from "./context/AuthContext"
 import Profile from "./pages/Profile/Profile"
 import Collection from "./pages/Collection/Collection"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 const App = () => {
   return (
@@ -19,8 +20,8 @@ const App = () => {
           <Route path="/cards" element={<Cards />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/collection" element={<Collection />} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
         </Routes>
         <Footer />
       </AuthProvider>

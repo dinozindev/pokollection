@@ -4,6 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { collection, deleteDoc, doc, getDoc, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import type { CardUser } from "../../types/type";
+import { useNavigate } from "react-router-dom";
 
 const Collection = () => {
 
@@ -61,7 +62,6 @@ const Collection = () => {
 
     useEffect(() => {
         if (!user) return;
-
         const cardsRef = collection(db, "users", user.uid, "cards");
 
         const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
