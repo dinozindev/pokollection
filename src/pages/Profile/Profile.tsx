@@ -5,6 +5,7 @@ import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import type { CardUser } from "../../types/type";
 import ProfileCard from "../../components/ProfileCard";
+import { Link } from "react-router-dom";
 
 
 const Profile = () => {
@@ -25,11 +26,6 @@ const Profile = () => {
         }
 
     }
-
-    useEffect(() => {
-
-    }, [user]);
-
 
     useEffect(() => {
         if (!user) return;
@@ -61,12 +57,12 @@ const Profile = () => {
                 <div className="flex justify-center flex-wrap mt-4 mx-4 text-xl">
                     <ProfileCard>
                         <p className="h-1/2">Cartas</p>
-                        <div className="flex justify-end h-1/2">
-                            <p className="text-4xl text-amber-800 font-semibold">{cardCount}</p>
+                        <div className="flex justify-end items-end h-1/2">
+                            <p className="text-6xl text-amber-800 font-semibold">{cardCount}</p>
                         </div>
                     </ProfileCard>
                     <ProfileCard>
-                        <p>Pokémon favorito: {userData?.favoritePokemon ?? "Nenhum"}</p>
+                        <p>Pokémon favorito {userData?.favoritePokemon ?? "Nenhum"}</p>
                     </ProfileCard>
                     <ProfileCard>
                         <p>Outro card</p>
@@ -74,6 +70,16 @@ const Profile = () => {
                     <ProfileCard>
                         <p>Outro card</p>
                     </ProfileCard>
+                </div>
+                <div className="flex gap-2 mt-4 mx-4 w-full items-center">
+                    <div className="flex border-1 border-gray-300 text-xl px-4 py-2 ml-4 w-1/2 items-center justify-between">
+                        <p>Favoritos</p>
+                        <i className="fa-solid fa-star text-amber-300"></i>
+                    </div>
+                    <Link to="/collection" className="flex border-1 border-gray-300 text-xl px-4 py-2 mr-4 w-1/2 items-center justify-between">
+                        <p>Coleção</p>
+                        <i className="fa-solid fa-layer-group text-amber-800"></i></Link>
+                    
                 </div>
             </div>
         </section>
