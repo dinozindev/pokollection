@@ -49,7 +49,7 @@ const Register = () => {
                 <label htmlFor="input__username">Nome de usuário</label>
                 <input
                     id="input__username"
-                    className="border-1 rounded-xl px-2 py-1"
+                    className="border rounded-xl px-2 py-1"
                     type="text"
                     value={user.username}
                     onChange={(e) => setUser({ ...user, username: e.target.value })}
@@ -57,7 +57,7 @@ const Register = () => {
                 <label htmlFor="input__email">Email</label>
                 <input
                     id="input__email"
-                    className="border-1 rounded-xl px-2 py-1"
+                    className="border rounded-xl px-2 py-1"
                     type="text"
                     value={user.email}
                     onChange={(e) => setUser({ ...user, email: e.target.value })}
@@ -65,7 +65,7 @@ const Register = () => {
                 <label htmlFor="input__senha">Senha</label>
                 <input
                     id="input__senha"
-                    className="border-1 rounded-xl px-2 py-1"
+                    className="border rounded-xl px-2 py-1"
                     type="password"
                     value={user.password}
                     onChange={(e) => setUser({ ...user, password: e.target.value })}

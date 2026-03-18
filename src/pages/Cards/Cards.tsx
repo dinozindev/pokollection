@@ -16,6 +16,7 @@ const Cards = () => {
     const [userCards, setUserCards] = useState<Record<string, number>>({});
     const [search, setSearch] = useState<string>('Pikachu');
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+    const [favorites, setFavorites] = useState<Record<string, boolean>>({});
 
     const fetchCards = async () => {
         try {
@@ -74,6 +75,32 @@ const Cards = () => {
         }
     };
 
+    const toggleFavorite = async (card: Card) => {
+        if (!user) return;
+
+        const cardRef = doc(db, "users", user.uid, "favorites", card.id);
+
+        const snapshot = await getDoc(cardRef);
+
+        if (snapshot.exists()) {
+            await deleteDoc(cardRef);
+            return;
+        }
+
+        await setDoc(
+            cardRef,
+            {
+                id: card.id,
+                name: card.name,
+                image: card.image ?? "",
+                illustrator: card.illustrator ?? "",
+                localId: card.localId,
+                set: card.set
+            },
+            { merge: true }
+        );
+    }
+
     const handleImageLoad = (id: string) => {
         setLoadedImages((prev) => ({
             ...prev,
@@ -105,6 +132,24 @@ const Cards = () => {
         return () => unsubscribe();
     }, [user]);
 
+    useEffect(() => {
+        if (!user) return;
+
+        const favRef = collection(db, "users", user.uid, "favorites");
+
+        const unsubscribe = onSnapshot(favRef, (snapshot) => {
+            const favMap: Record<string, boolean> = {};
+
+            snapshot.forEach((doc) => {
+                favMap[doc.id] = true;
+            });
+
+            setFavorites(favMap);
+        });
+
+        return () => unsubscribe();
+    }, [user]);
+
     return (
         <section className="flex items-center pt-30 flex-col min-h-screen">
             <div className="flex items-center pb-10 gap-3">
@@ -122,7 +167,7 @@ const Cards = () => {
 
                             {!loadedImages[card.id] && (
                                 <div className="absolute inset-0 rounded-md overflow-hidden bg-gray-300">
-                                    <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300"></div>
+                                    <div className="absolute inset-0 animate-pulse bg-linear-to-r from-gray-300 via-gray-400 to-gray-300"></div>
                                 </div>
                             )}
 
@@ -135,7 +180,16 @@ const Cards = () => {
                         </div>
                         <h3>{card.name}</h3>
                         <p className="text-sm">{card.set.name}</p>
-                        <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
+                        <div className="flex gap-1 items-center">
+                            <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
+                            <i
+                                className={`cursor-pointer ${favorites[card.id]
+                                        ? "fa-solid fa-star text-yellow-400"
+                                        : "fa-regular fa-star text-gray-400"
+                                    }`}
+                                onClick={() => toggleFavorite(card)}
+                            ></i>
+                        </div>
                         <div className="flex items-center justify-between px-2">
                             <i
                                 className="fa-solid fa-minus text-red-500 cursor-pointer"

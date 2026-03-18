@@ -4,7 +4,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { collection, deleteDoc, doc, getDoc, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import type { CardUser } from "../../types/type";
-import { useNavigate } from "react-router-dom";
 
 const Collection = () => {
 
@@ -88,7 +87,7 @@ const Collection = () => {
 
                             {!loadedImages[card.id] && (
                                 <div className="absolute inset-0 rounded-md overflow-hidden bg-gray-300">
-                                    <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300"></div>
+                                    <div className="absolute inset-0 animate-pulse bg-linear-to-r from-gray-300 via-gray-400 to-gray-300"></div>
                                 </div>
                             )}
 

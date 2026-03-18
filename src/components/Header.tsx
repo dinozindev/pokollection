@@ -35,6 +35,7 @@ const Header = () => {
                 <Link to="/cards">Cards</Link>
                 <Link to="/profile">Perfil</Link>
                 <Link to="/collection">Coleção</Link>
+                <Link to="/favorites">Favoritos</Link>
                 {user ? <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-white transition-all" onClick={() => doSignOut()}>
                     Logout
                 </div>

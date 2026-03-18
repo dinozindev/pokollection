@@ -35,9 +35,9 @@ const Login = () => {
       <h2 className="text-3xl">Login</h2>
       <form onSubmit={doLogin} className="flex flex-col py-8 gap-3 w-2/3">
         <label htmlFor="input__email">Email</label>
-        <input id="input__email" className="border-1 rounded-xl px-2 py-1" type="text" value={user.email} onChange={(e) => setUser({...user, email: e.target.value})} />
+        <input id="input__email" className="border rounded-xl px-2 py-1" type="text" value={user.email} onChange={(e) => setUser({...user, email: e.target.value})} />
         <label htmlFor="input__senha">Senha</label>
-        <input id="input__senha" className="border-1 rounded-xl px-2 py-1" type="password" value={user.password} onChange={(e) => setUser({...user, password: e.target.value})} />
+        <input id="input__senha" className="border rounded-xl px-2 py-1" type="password" value={user.password} onChange={(e) => setUser({...user, password: e.target.value})} />
         {error && (
                     <span className="text-red-500">E-mail ou senha incorreto(s).</span>
                 )}
