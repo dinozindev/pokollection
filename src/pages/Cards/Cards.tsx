@@ -183,7 +183,7 @@ const Cards = () => {
                         <div className="flex gap-1 items-center">
                             <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
                             <i
-                                className={`cursor-pointer ${favorites[card.id]
+                                className={`cursor-pointer transition-all ${favorites[card.id]
                                         ? "fa-solid fa-star text-yellow-400"
                                         : "fa-regular fa-star text-gray-400"
                                     }`}

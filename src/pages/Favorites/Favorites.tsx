@@ -1,8 +1,122 @@
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "../../context/AuthContext"
+import type { CardUser } from "../../types/type";
+import { collection, deleteDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import { db } from "../../firebase/firebase";
+import placeholder from "../../assets/card-placeholder.png";
 
 const Favorites = () => {
+
+  const { user } = useContext(AuthContext);
+  const [userFavoriteCards, setUserFavoriteCards] = useState<CardUser[]>([]);
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+
+  const handleImageLoad = (id: string) => {
+    setLoadedImages(prev => ({
+      ...prev,
+      [id]: true
+    }));
+  }
+
+  const toggleFavorite = async (card: CardUser) => {
+    if (!user) return;
+
+    const cardRef = doc(db, "users", user.uid, "favorites", card.id);
+
+    const snapshot = await getDoc(cardRef);
+
+    if (snapshot.exists()) {
+      await deleteDoc(cardRef);
+      return;
+    }
+
+    await setDoc(
+      cardRef,
+      {
+        id: card.id,
+        name: card.name,
+        image: card.image ?? "",
+        illustrator: card.illustrator ?? "",
+        localId: card.localId,
+        set: card.set
+      },
+      { merge: true }
+    );
+  }
+
+  useEffect(() => {
+    if (!user) return;
+    const cardsRef = collection(db, "users", user.uid, "favorites");
+
+    const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
+      const cards: CardUser[] = snapshot.docs.map((doc) => ({
+        ...(doc.data() as CardUser),
+        id: doc.id
+      }));
+
+      setUserFavoriteCards(cards);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const favRef = collection(db, "users", user.uid, "favorites");
+
+    const unsubscribe = onSnapshot(favRef, (snapshot) => {
+      const favMap: Record<string, boolean> = {};
+
+      snapshot.forEach((doc) => {
+        favMap[doc.id] = true;
+      });
+
+      setFavorites(favMap);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
   return (
     <section className="flex items-center pt-30 flex-col min-h-screen">
-      Favorites
+      <h2 className="text-4xl font-medium text-amber-800">Meus Favoritos</h2>
+      <div className="flex items-center pb-10 gap-3">
+      </div>
+      <div className="flex flex-wrap justify-center gap-6">
+        {userFavoriteCards.length !== 0 ? userFavoriteCards.map(card => (
+          <div className="w-2/5 flex flex-col gap-1.5 justify-between bg-gray-100 px-2 py-4 rounded-md" key={card.id}>
+            <div className="relative">
+
+              {!loadedImages[card.id] && (
+                <div className="absolute inset-0 rounded-md overflow-hidden bg-gray-300">
+                  <div className="absolute inset-0 animate-pulse bg-linear-to-r from-gray-300 via-gray-400 to-gray-300"></div>
+                </div>
+              )}
+
+              <img
+                src={card.image ? `${card.image}/high.png` : placeholder}
+                onLoad={() => handleImageLoad(card.id)}
+                className={`w-full transition-opacity duration-300 ${loadedImages[card.id] ? "opacity-100" : "opacity-0"
+                  }`}
+              />
+            </div>
+            <h3>{card.name}</h3>
+            <p className="text-sm">{card.set.name}</p>
+            <div className="flex gap-1 items-center">
+              <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
+              <i
+                className={`cursor-pointer ${favorites[card.id]
+                  ? "fa-solid fa-star text-yellow-400"
+                  : "fa-regular fa-star text-gray-400"
+                  }`}
+                onClick={() => toggleFavorite(card)}
+              ></i>
+            </div>
+          </div>
+        )) : <p>Nenhuma carta em seus favoritos ainda!</p>}
+      </div>
     </section>
   )
 }
