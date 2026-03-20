@@ -12,6 +12,7 @@ const Favorites = () => {
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
 
+
   const handleImageLoad = (id: string) => {
     setLoadedImages(prev => ({
       ...prev,
@@ -19,6 +20,7 @@ const Favorites = () => {
     }));
   }
 
+  // obtém as cartas favoritas do usuário, e caso esteja nela, quando clicado para favoritar, desfavorita e vice-versa
   const toggleFavorite = async (card: CardUser) => {
     if (!user) return;
 
@@ -45,34 +47,28 @@ const Favorites = () => {
     );
   }
 
-  useEffect(() => {
-    if (!user) return;
-    const cardsRef = collection(db, "users", user.uid, "favorites");
-
-    const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
-      const cards: CardUser[] = snapshot.docs.map((doc) => ({
-        ...(doc.data() as CardUser),
-        id: doc.id
-      }));
-
-      setUserFavoriteCards(cards);
-    });
-
-    return () => unsubscribe();
-  }, [user]);
-
+  // obtém todas as cartas favoritas do usuário e armazena no estado userFavoriteCards
   useEffect(() => {
     if (!user) return;
 
     const favRef = collection(db, "users", user.uid, "favorites");
 
     const unsubscribe = onSnapshot(favRef, (snapshot) => {
+      const cards: CardUser[] = [];
       const favMap: Record<string, boolean> = {};
 
       snapshot.forEach((doc) => {
+        const data = doc.data() as CardUser;
+
+        cards.push({
+          ...data,
+          id: doc.id
+        });
+
         favMap[doc.id] = true;
       });
 
+      setUserFavoriteCards(cards);
       setFavorites(favMap);
     });
 

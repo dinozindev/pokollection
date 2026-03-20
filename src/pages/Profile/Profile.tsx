@@ -20,6 +20,7 @@ const Profile = () => {
     const [userCards, setUserCards] = useState<CardUser[]>([]);
     const [cardCount, setCardCount] = useState<number>(0);
     const [editMenu, setEditMenu] = useState<boolean>(false);
+    const [showUpdate, setShowUpdate] = useState<boolean>(false);
 
     // Obtém as informações do usuário existente
     const fetchUserInfo = async () => {
@@ -61,12 +62,19 @@ const Profile = () => {
 
             setEditMenu(false);
 
+            setShowUpdate(true);
+
+            setTimeout(() => {
+                setShowUpdate(false);
+            }, 3000)
+
         } catch (error) {
             console.error("Erro ao atualizar perfil:", error);
             alert("Erro ao salvar alterações.");
         }
     };
 
+    // busca todas as cartas salvas do usuário e contabiliza elas em um estado de total
     useEffect(() => {
         if (!user) return;
         fetchUserInfo();
@@ -160,6 +168,11 @@ const Profile = () => {
                         <i className="fa-solid fa-layer-group text-amber-800"></i></Link>
                 </div>
             </div>
+            {showUpdate && (
+                <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in z-20">
+                    Perfil salvo com sucesso!
+                </div>
+            )}
         </section >
     )
 }

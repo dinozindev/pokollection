@@ -13,6 +13,7 @@ const Login = () => {
   const [error, setError] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  // Realiza o Login no Firebase e retorna para a tela de Cards
   const doLogin = async (e: React.FormEvent) => {
     e.preventDefault(); 
           try {
@@ -23,7 +24,8 @@ const Login = () => {
               );
               console.log(response.user);
               setError(false);
-              navigate("/cards");
+              // passa o estado de loggedIn para aparecer o Toast
+              navigate("/cards", {state: {loggedIn: true}});
           } catch (error) {
               console.error(error);
               setError(true);

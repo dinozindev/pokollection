@@ -7,16 +7,20 @@ import Filter from "../../components/Filter";
 import { AuthContext } from "../../context/AuthContext";
 import { collection, deleteDoc, doc, getDoc, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 
 const Cards = () => {
 
     const { user } = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const [cards, setCards] = useState<Card[]>([]);
     const [userCards, setUserCards] = useState<Record<string, number>>({});
     const [search, setSearch] = useState<string>('Pikachu');
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
     const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+    const [showLoginWindow, setShowLoginWindow] = useState<boolean>(false);
 
     const fetchCards = async () => {
         try {
@@ -150,6 +154,19 @@ const Cards = () => {
         return () => unsubscribe();
     }, [user]);
 
+    useEffect(() => {
+        if (location.state?.loggedIn) {
+            setShowLoginWindow(true);
+
+            // limpa o state depois de usar
+            navigate(location.pathname, { replace: true });
+
+            setTimeout(() => {
+                setShowLoginWindow(false);
+            }, 5000);
+        }
+    }, [location.state]);
+
     return (
         <section className="flex items-center pt-30 flex-col min-h-screen">
             <div className="flex items-center pb-10 gap-3">
@@ -184,8 +201,8 @@ const Cards = () => {
                             <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
                             <i
                                 className={`cursor-pointer transition-all ${favorites[card.id]
-                                        ? "fa-solid fa-star text-yellow-400"
-                                        : "fa-regular fa-star text-gray-400"
+                                    ? "fa-solid fa-star text-yellow-400"
+                                    : "fa-regular fa-star text-gray-400"
                                     }`}
                                 onClick={() => toggleFavorite(card)}
                             ></i>
@@ -206,6 +223,11 @@ const Cards = () => {
                     </div>
                 )) : <p>Nenhuma carta encontrada.</p>}
             </div>
+            {showLoginWindow && (
+                <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-20">
+                    Login realizado com sucesso!
+                </div>
+            )}
         </section>
     )
 }

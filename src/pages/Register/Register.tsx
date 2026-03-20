@@ -15,6 +15,7 @@ const Register = () => {
     const [error, setError] = useState<boolean>(false);
     const navigate = useNavigate();
 
+    // Cria uma nova conta no Firebase Auth
     const createAccount = async (e: React.FormEvent) => {
         e.preventDefault();
 
