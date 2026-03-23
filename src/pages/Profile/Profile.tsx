@@ -123,7 +123,7 @@ const Profile = () => {
 
     return (
         <section className="pt-30 flex flex-col items-center">
-            <img src={userData.avatar ? userData.avatar : profileImage} className="rounded-full w-1/2 absolute" />
+            <img src={userData?.avatar || profileImage} className="rounded-full w-1/2 absolute" />
             {editMenu && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     {/* Fundo embaçado */}
