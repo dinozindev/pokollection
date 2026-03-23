@@ -45,6 +45,31 @@ const Profile = () => {
         setEditMenu(true);
     };
 
+    // Converte a imagem de perfil para Base64 para que possa ser armazenada no firestore
+    const convertToBase64 = (file : File) : Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.readAsDataURL(file);
+
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = (error) => reject(error);
+        })
+    }
+
+    const handleImageChange = async (e: any) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const base64 = await convertToBase64(file);
+
+        setUserForm({
+            ...userForm,
+            avatar: base64
+        });
+    };
+
     // Atualiza os dados do usuário no banco de dados
     const updateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -98,43 +123,69 @@ const Profile = () => {
 
     return (
         <section className="pt-30 flex flex-col items-center">
-            <img src={profileImage} className="rounded-full w-1/2 absolute" />
-            <div className={`bg-white w-4/5 p-4 z-10 gap-4 ${editMenu ? "fixed" : "hidden"}`}>
-                <div className="flex justify-between items-center">
-                    <p className="text-xl">Editar Perfil</p>
-                    <i className="fa-solid fa-xmark text-2xl" onClick={() => setEditMenu(false)}></i>
+            <img src={userData.avatar ? userData.avatar : profileImage} className="rounded-full w-1/2 absolute" />
+            {editMenu && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    {/* Fundo embaçado */}
+                    <div
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                        onClick={() => setEditMenu(false)}
+                    ></div>
+                    {/* Pop-up de edição */}
+                    <div className="relative bg-white w-4/5 max-w-md p-4 rounded-2xl shadow-lg z-10">
+                        <div className="flex justify-between items-center">
+                            <p className="text-xl">Editar Perfil</p>
+                            <i
+                                className="fa-solid fa-xmark text-2xl cursor-pointer"
+                                onClick={() => setEditMenu(false)}
+                            ></i>
+                        </div>
+                        <form onSubmit={updateProfile} className="flex flex-col gap-3 mt-4">
+                            <label htmlFor="input__username">Nome de usuário</label>
+                            <input
+                                id="input__username"
+                                type="text"
+                                className="border p-2 rounded"
+                                value={userForm.username}
+                                onChange={(e) =>
+                                    setUserForm({ ...userForm, username: e.target.value })
+                                }
+                            />
+                            <label htmlFor="input__favoritepkmn">Pokémon favorito</label>
+                            <input
+                                id="input__favoritepkmn"
+                                type="text"
+                                className="border p-2 rounded"
+                                value={userForm.favoritePokemon}
+                                onChange={(e) =>
+                                    setUserForm({
+                                        ...userForm,
+                                        favoritePokemon: e.target.value,
+                                    })
+                                }
+                            />
+                            <label htmlFor="input__profilepicture">Imagem de Perfil</label>
+                            <input
+                                id="input__profilepicture"
+                                type="file"
+                                accept="image/png, image/jpeg"
+                                className="border p-2 rounded"
+                                onChange={handleImageChange}
+                            />
+                            <button
+                                type="submit"
+                                className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800"
+                            >
+                                Atualizar perfil
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <form onSubmit={updateProfile} className="flex flex-col gap-3 mt-4">
-                    <label htmlFor="input__username">Nome de usuário</label>
-                    <input
-                        id="input__username"
-                        type="text"
-                        placeholder="Nome de usuário"
-                        className="border p-2 rounded"
-                        value={userForm.username}
-                        onChange={(e) => setUserForm({ ...userForm, username: e.target.value })}
-                    />
-                    <label htmlFor="input__favoritepkmn">Pokémon favorito</label>
-                    <input
-                        id="input__favoritepkmn"
-                        type="text"
-                        placeholder="Pokémon favorito"
-                        className="border p-2 rounded"
-                        value={userForm.favoritePokemon}
-                        onChange={(e) => setUserForm({ ...userForm, favoritePokemon: e.target.value })}
-                    />
-                    <button
-                        type="submit"
-                        className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800"
-                    >
-                        Atualizar perfil
-                    </button>
-                </form>
-            </div>
+            )}
             <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-30 pt-30 w-full">
                 <div className="flex items-center gap-2">
                     <h3 className="text-2xl">{userData?.username}</h3>
-                    <i className="fa-solid fa-pen-to-square cursor-pointer" onClick={handleEditClick}></i>
+                    <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all" onClick={handleEditClick}></i>
                 </div>
 
                 <p className="opacity-50">{userData?.email}</p>
