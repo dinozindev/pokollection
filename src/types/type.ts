@@ -1,4 +1,3 @@
-import type { StringEndpointList } from "@tcgdex/sdk";
 
 export type User = {
     email: string;
@@ -33,4 +32,6 @@ export type ProfileInfo = {
     username: string;
     favoritePokemon: string;
     avatar: string;
+    bio: string;
+    favoriteType: string;
 }

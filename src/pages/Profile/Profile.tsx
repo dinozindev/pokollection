@@ -6,6 +6,7 @@ import { db } from "../../firebase/firebase";
 import { type ProfileInfo, type CardUser } from "../../types/type";
 import ProfileCard from "../../components/ProfileCard";
 import { Link } from "react-router-dom";
+import types from "../../../pokemonTypes.json";
 
 
 const Profile = () => {
@@ -14,7 +15,9 @@ const Profile = () => {
     const [userForm, setUserForm] = useState<ProfileInfo>({
         username: "",
         favoritePokemon: "",
-        avatar: ""
+        avatar: "",
+        bio: "",
+        favoriteType: ""
     });
     const [userData, setUserData] = useState<any>();
     const [userCards, setUserCards] = useState<CardUser[]>([]);
@@ -40,13 +43,15 @@ const Profile = () => {
         setUserForm({
             username: userData?.username || "",
             favoritePokemon: userData?.favoritePokemon || "",
-            avatar: userData?.avatar || ""
+            avatar: userData?.avatar || "",
+            bio: userData?.bio || "",
+            favoriteType: userData?.bio || ""
         });
         setEditMenu(true);
     };
 
     // Converte a imagem de perfil para Base64 para que possa ser armazenada no firestore
-    const convertToBase64 = (file : File) : Promise<string> => {
+    const convertToBase64 = (file: File): Promise<string> => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
 
@@ -57,6 +62,7 @@ const Profile = () => {
         })
     }
 
+    // transforma em base64 a imagem quando for dado upload
     const handleImageChange = async (e: any) => {
         const file = e.target.files[0];
 
@@ -140,7 +146,7 @@ const Profile = () => {
                                 onClick={() => setEditMenu(false)}
                             ></i>
                         </div>
-                        <form onSubmit={updateProfile} className="flex flex-col gap-3 mt-4">
+                        <form onSubmit={updateProfile} className="flex flex-col gap-3 mt-4" id="form__update">
                             <label htmlFor="input__username">Nome de usuário</label>
                             <input
                                 id="input__username"
@@ -172,6 +178,34 @@ const Profile = () => {
                                 className="border p-2 rounded"
                                 onChange={handleImageChange}
                             />
+                            <label htmlFor="input__bio">Bio</label>
+                            <input
+                                id="input__bio"
+                                type="text"
+                                className="border p-2 rounded field-sizing-content h-40"
+                                value={userForm.bio}
+                                onChange={(e) =>
+                                    setUserForm({
+                                        ...userForm,
+                                        bio: e.target.value,
+                                    })
+                                }
+                            />
+                            <label htmlFor="select__type">Tipo Favorito</label>
+                            <select
+                                name="types"
+                                id="select__type"
+                                form="form__update"
+                                onChange={(e) => setUserForm({
+                                    ...userForm,
+                                    favoriteType: e.target.value
+                                })}>
+                                {types.map(type => {
+                                    return (
+                                        <option key={type.name} value={type.name}>{type.name}</option>
+                                    )
+                                })}
+                            </select>
                             <button
                                 type="submit"
                                 className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800"
@@ -187,8 +221,8 @@ const Profile = () => {
                     <h3 className="text-2xl">{userData?.username}</h3>
                     <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all" onClick={handleEditClick}></i>
                 </div>
-
                 <p className="opacity-50">{userData?.email}</p>
+                <p>{userData?.bio || "Nenhuma informação"}</p>
                 <div className="flex justify-center flex-wrap mt-4 mx-4 text-xl">
                     <ProfileCard>
                         <p className="h-1/2">Cartas</p>
@@ -199,11 +233,14 @@ const Profile = () => {
                     <ProfileCard>
                         <p className="h-1/2">Pokémon favorito</p>
                         <div className="flex justify-end items-end h-1/2">
-                            <p className="text-3xl text-amber-800 font-semibold">{userData?.favoritePokemon != "" ? userData?.favoritePokemon : "Nenhum"}</p>
+                            <p className="text-3xl text-amber-800 font-semibold">{userData?.favoritePokemon || "Nenhum"}</p>
                         </div>
                     </ProfileCard>
                     <ProfileCard>
-                        <p>Outro card</p>
+                        <p className="h-1/2">Tipo Favorito</p>
+                        <div className="flex justify-end items-end h-1/2">
+                            <p className="text-3xl text-amber-800 font-semibold">{userData?.favoriteType || "Nenhum"}</p>
+                        </div>
                     </ProfileCard>
                     <ProfileCard>
                         <p>Outro card</p>
