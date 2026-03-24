@@ -17,7 +17,8 @@ const Profile = () => {
         favoritePokemon: "",
         avatar: "",
         bio: "",
-        favoriteType: ""
+        favoriteType: "",
+        favoriteGen: ""
     });
     const [userData, setUserData] = useState<any>();
     const [userCards, setUserCards] = useState<CardUser[]>([]);
@@ -45,7 +46,8 @@ const Profile = () => {
             favoritePokemon: userData?.favoritePokemon || "",
             avatar: userData?.avatar || "",
             bio: userData?.bio || "",
-            favoriteType: userData?.bio || ""
+            favoriteType: userData?.bio || "",
+            favoriteGen: userData?.favoriteGen || ""
         });
         setEditMenu(true);
     };
@@ -202,11 +204,32 @@ const Profile = () => {
                                     ...userForm,
                                     favoriteType: e.target.value
                                 })}>
+                                    <option value="" disabled selected hidden>-- Selecione um tipo --</option> 
                                 {types.map(type => {
                                     return (
                                         <option key={type.name} value={type.name}>{type.name}</option>
                                     )
                                 })}
+                            </select>
+                            <label htmlFor="select__gen">Geração Favorita</label>
+                            <select
+                                name="gens"
+                                id="select__gen"
+                                form="form__update"
+                                onChange={(e) => setUserForm({
+                                    ...userForm,
+                                    favoriteGen: e.target.value
+                                })}>    
+                                        <option value="" disabled selected hidden>-- Selecione uma geração --</option> 
+                                        <option key="gen1" value="Gen I">Gen I (Kanto)</option>
+                                        <option key="gen2" value="Gen II">Gen II (Johto)</option>
+                                        <option key="gen3" value="Gen III">Gen III (Hoenn)</option>
+                                        <option key="gen4" value="Gen IV">Gen IV (Sinnoh)</option>
+                                        <option key="gen5" value="Gen V">Gen V (Unova)</option>
+                                        <option key="gen6" value="Gen VI">Gen VI (Kalos)</option>
+                                        <option key="gen7" value="Gen VII">Gen VII (Alola)</option>
+                                        <option key="gen8" value="Gen VIII">Gen VIII (Galar)</option>
+                                        <option key="gen9" value="Gen IX">Gen IX (Paldea)</option>
                             </select>
                             <button
                                 type="submit"
@@ -218,7 +241,7 @@ const Profile = () => {
                     </div>
                 </div>
             )}
-            <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-30 pt-30 w-full">
+            <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-25 pt-30 w-full">
                 <div className="flex items-center gap-2">
                     <h3 className="text-2xl">{userData?.username}</h3>
                     <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all" onClick={handleEditClick}></i>
@@ -235,18 +258,24 @@ const Profile = () => {
                     <ProfileCard>
                         <p className="h-1/2">Pokémon favorito</p>
                         <div className="flex justify-end items-end h-1/2">
-                            <p className="text-3xl text-amber-800 font-semibold">{userData?.favoritePokemon || "Nenhum"}</p>
+                            <p className="text-2xl text-amber-800 font-semibold">{userData?.favoritePokemon || "Nenhum"}</p>
                         </div>
                     </ProfileCard>
                     <ProfileCard>
                         <p className="h-1/2">Tipo Favorito</p>
                         <div className="flex justify-end items-center h-1/2 gap-2">
                             <p className="text-2xl text-amber-800 font-semibold">{userData?.favoriteType || "Nenhum"}</p>
-                            <img className="w-1/4" src={types.find((type) => type.name == userData?.favoriteType)?.image} />
+                            {
+                                types.find((type) => type.name == userData?.favoriteType) ? <img className="w-1/5" src={types.find((type) => type.name == userData?.favoriteType)?.image} /> : <></>
+                            }
+                            {/* <img className="w-1/4" src={types.find((type) => type.name == userData?.favoriteType)?.image} /> */}
                         </div>
                     </ProfileCard>
                     <ProfileCard>
-                        <p>Outro card</p>
+                        <p className="h-1/2">Geração Favorita</p>
+                        <div className="flex justify-end items-center h-1/2 gap-2">
+                            <p className="text-2xl text-amber-800 font-semibold">{userData?.favoriteGen || "Nenhuma"}</p>
+                        </div>
                     </ProfileCard>
                 </div>
                 <div className="flex gap-2 mt-4 mx-4 w-full items-center">

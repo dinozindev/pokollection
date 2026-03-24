@@ -33,7 +33,8 @@ const Register = () => {
                 avatar: "",
                 createdAt: serverTimestamp(),
                 bio: "",
-                favoriteType: ""
+                favoriteType: "",
+                favoriteGen: ""
             })
 
             console.log(response.user);

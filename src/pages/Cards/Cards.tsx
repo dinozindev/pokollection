@@ -7,7 +7,7 @@ import Filter from "../../components/Filter";
 import { AuthContext } from "../../context/AuthContext";
 import { collection, deleteDoc, doc, getDoc, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Cards = () => {
 
@@ -195,7 +195,10 @@ const Cards = () => {
                                     }`}
                             />
                         </div>
-                        <h3>{card.name}</h3>
+                        <div className="flex items-center justify-between">
+                            <h3>{card.name}</h3>
+                            <i className="fa-solid fa-circle-info text-amber-800 hover:text-black transition-all"></i>
+                        </div>
                         <p className="text-sm">{card.set.name}</p>
                         <div className="flex gap-1 items-center">
                             <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>

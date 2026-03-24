@@ -34,4 +34,5 @@ export type ProfileInfo = {
     avatar: string;
     bio: string;
     favoriteType: string;
+    favoriteGen: string;
 }
