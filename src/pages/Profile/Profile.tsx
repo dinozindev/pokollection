@@ -86,7 +86,9 @@ const Profile = () => {
             await updateDoc(docRef, {
                 username: userForm.username,
                 favoritePokemon: userForm.favoritePokemon,
-                avatar: userForm.avatar
+                avatar: userForm.avatar,
+                bio: userForm.bio,
+                favoriteType: userForm.favoriteType
             });
 
             setUserData((prev: any) => ({ ...prev, ...userForm }));
@@ -238,8 +240,9 @@ const Profile = () => {
                     </ProfileCard>
                     <ProfileCard>
                         <p className="h-1/2">Tipo Favorito</p>
-                        <div className="flex justify-end items-end h-1/2">
-                            <p className="text-3xl text-amber-800 font-semibold">{userData?.favoriteType || "Nenhum"}</p>
+                        <div className="flex justify-end items-center h-1/2 gap-2">
+                            <p className="text-2xl text-amber-800 font-semibold">{userData?.favoriteType || "Nenhum"}</p>
+                            <img className="w-1/4" src={types.find((type) => type.name == userData?.favoriteType)?.image} />
                         </div>
                     </ProfileCard>
                     <ProfileCard>
