@@ -4,14 +4,18 @@ import { Query, type Card } from "@tcgdex/sdk";
 import { tcgdex } from "../../api/api";
 import Filter from "../../components/Filter";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, deleteDoc, doc, getDoc, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useLocation, useNavigate } from "react-router-dom";
 import CardDiv from "../../components/CardDiv";
+import { useCards } from "../../hooks/useCards";
+import { useFavorites } from "../../hooks/useFavorites";
 
 const Cards = () => {
 
     const { user } = useContext(AuthContext);
+    const { addCard, removeCard } = useCards();
+    const { toggleFavorite } = useFavorites();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -28,7 +32,7 @@ const Cards = () => {
                 Query.create()
                     .contains('name', search)
             )
-            const cardsList = await Promise.all(
+            const cardsList : any = await Promise.all(
                 cardsResume.map(card => tcgdex.card.get(card.id))
             );
             setCards(cardsList);
@@ -36,73 +40,6 @@ const Cards = () => {
         } catch (error) {
             console.log(error)
         }
-    }
-
-    const addCard = async (card: Card) => {
-        if (!user) return;
-
-        const cardRef = doc(db, "users", user.uid, "cards", card.id);
-
-        await setDoc(
-            cardRef,
-            {
-                id: card.id,
-                name: card.name,
-                image: card.image ?? "",
-                illustrator: card.illustrator ?? "",
-                localId: card.localId,
-                set: card.set,
-                quantity: increment(1)
-            },
-            { merge: true }
-        );
-    };
-
-
-    const removeCard = async (card: Card) => {
-        if (!user) return;
-
-        const cardRef = doc(db, "users", user.uid, "cards", card.id);
-
-        const snapshot = await getDoc(cardRef);
-
-        if (!snapshot.exists()) return;
-
-        const data = snapshot.data();
-
-        if (data.quantity <= 1) {
-            await deleteDoc(cardRef);
-        } else {
-            await updateDoc(cardRef, {
-                quantity: increment(-1)
-            });
-        }
-    };
-
-    const toggleFavorite = async (card: Card) => {
-        if (!user) return;
-
-        const cardRef = doc(db, "users", user.uid, "favorites", card.id);
-
-        const snapshot = await getDoc(cardRef);
-
-        if (snapshot.exists()) {
-            await deleteDoc(cardRef);
-            return;
-        }
-
-        await setDoc(
-            cardRef,
-            {
-                id: card.id,
-                name: card.name,
-                image: card.image ?? "",
-                illustrator: card.illustrator ?? "",
-                localId: card.localId,
-                set: card.set
-            },
-            { merge: true }
-        );
     }
 
     const handleImageLoad = (id: string) => {
@@ -119,6 +56,9 @@ const Cards = () => {
 
     useEffect(() => {
         fetchCards();
+    }, [search])
+
+    useEffect(() => {
         if (!user) return;
 
         const cardsRef = collection(db, "users", user.uid, "cards");

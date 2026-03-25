@@ -1,56 +1,18 @@
 import { useContext, useEffect, useState } from "react";
 import placeholder from "../../assets/card-placeholder.png";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, deleteDoc, doc, getDoc, increment, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { collection, onSnapshot} from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import type { CardUser } from "../../types/type";
+import { useCards } from "../../hooks/useCards";
 
 const Collection = () => {
 
     const { user } = useContext(AuthContext);
+    const { addCard, removeCard } = useCards();
+
     const [userCards, setUserCards] = useState<CardUser[]>([]);
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-
-    const addCard = async (card: CardUser) => {
-        if (!user) return;
-
-        const cardRef = doc(db, "users", user.uid, "cards", card.id);
-
-        await setDoc(
-            cardRef,
-            {
-                id: card.id,
-                name: card.name,
-                image: card.image ?? "",
-                illustrator: card.illustrator ?? "",
-                localId: card.localId,
-                set: card.set,
-                quantity: increment(1)
-            },
-            { merge: true }
-        );
-    };
-
-
-    const removeCard = async (card: CardUser) => {
-        if (!user) return;
-
-        const cardRef = doc(db, "users", user.uid, "cards", card.id);
-
-        const snapshot = await getDoc(cardRef);
-
-        if (!snapshot.exists()) return;
-
-        const data = snapshot.data();
-
-        if (data.quantity <= 1) {
-            await deleteDoc(cardRef);
-        } else {
-            await updateDoc(cardRef, {
-                quantity: increment(-1)
-            });
-        }
-    };
 
     const handleImageLoad = (id: string) => {
         setLoadedImages((prev) => ({

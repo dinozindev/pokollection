@@ -1,13 +1,16 @@
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../context/AuthContext"
 import type { CardUser } from "../../types/type";
-import { collection, deleteDoc, doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import placeholder from "../../assets/card-placeholder.png";
+import { useFavorites } from "../../hooks/useFavorites";
 
 const Favorites = () => {
 
   const { user } = useContext(AuthContext);
+  const {toggleFavoriteUser} = useFavorites();
+
   const [userFavoriteCards, setUserFavoriteCards] = useState<CardUser[]>([]);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [favorites, setFavorites] = useState<Record<string, boolean>>({});
@@ -18,33 +21,6 @@ const Favorites = () => {
       ...prev,
       [id]: true
     }));
-  }
-
-  // obtém as cartas favoritas do usuário, e caso esteja nela, quando clicado para favoritar, desfavorita e vice-versa
-  const toggleFavorite = async (card: CardUser) => {
-    if (!user) return;
-
-    const cardRef = doc(db, "users", user.uid, "favorites", card.id);
-
-    const snapshot = await getDoc(cardRef);
-
-    if (snapshot.exists()) {
-      await deleteDoc(cardRef);
-      return;
-    }
-
-    await setDoc(
-      cardRef,
-      {
-        id: card.id,
-        name: card.name,
-        image: card.image ?? "",
-        illustrator: card.illustrator ?? "",
-        localId: card.localId,
-        set: card.set
-      },
-      { merge: true }
-    );
   }
 
   // obtém todas as cartas favoritas do usuário e armazena no estado userFavoriteCards
@@ -107,7 +83,7 @@ const Favorites = () => {
                   ? "fa-solid fa-star text-yellow-400"
                   : "fa-regular fa-star text-gray-400"
                   }`}
-                onClick={() => toggleFavorite(card)}
+                onClick={() => toggleFavoriteUser(card)}
               ></i>
             </div>
           </div>
