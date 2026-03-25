@@ -21,7 +21,8 @@ const Cards = () => {
 
     const [cards, setCards] = useState<Card[]>([]);
     const [userCards, setUserCards] = useState<Record<string, number>>({});
-    const [search, setSearch] = useState<string>('Pikachu');
+    const [search, setSearch] = useState<string>('');
+    const [query, setQuery] = useState<string>('');
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
     const [favorites, setFavorites] = useState<Record<string, boolean>>({});
     const [showLoginWindow, setShowLoginWindow] = useState<boolean>(false);
@@ -51,12 +52,13 @@ const Cards = () => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        fetchCards();
+        setQuery(search);
     };
 
     useEffect(() => {
+        if (!query) return;
         fetchCards();
-    }, [search])
+    }, [query])
 
     useEffect(() => {
         if (!user) return;
@@ -121,7 +123,8 @@ const Cards = () => {
                 {cards.length !== 0 ? cards.map(card => (
                     // Componente de card
                     <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={toggleFavorite} removeCard={removeCard} addCard={addCard} userCards={userCards}/>
-                )) : <p>Nenhuma carta encontrada.</p>}
+                )) : <p className="p-2 text-center">Nenhuma carta encontrada. <br></br>
+                    Pesquise para encontrar a carta que deseja!</p>}
             </div>
             {showLoginWindow && (
                 <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-20">
