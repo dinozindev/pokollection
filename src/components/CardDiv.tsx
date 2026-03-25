@@ -5,11 +5,11 @@ type CardProps = {
     loadedImages: Record<string, boolean>;
     card: any;
     handleImageLoad: (id: string) => void;
-    favorites: Record<string, boolean>;
-    toggleFavorite: any;
-    removeCard: any;
-    addCard: any;
-    userCards: Record<string, number>;
+    favorites?: Record<string, boolean>;
+    toggleFavorite?: any;
+    removeCard?: any;
+    addCard?: any;
+    userCards?: any;
 }
 
 const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards }: CardProps) => {
@@ -42,19 +42,20 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                             {card.set.symbol && <img className="w-1/10" src={`${card.set.symbol}.png`} />}
                         </div>
                         <p className="shadow-xl border-gray-300 border py-4 text-center text-lg">{card.illustrator}</p>
-                        <div className="flex items-center justify-between px-2">
-                            <i
-                                className="fa-solid fa-minus text-red-500 cursor-pointer"
-                                onClick={() => removeCard(card)}
-                            ></i>
-                            <p className="w-1/2 text-center">
-                                {userCards[card.id] ?? 0}
-                            </p>
-                            <i
-                                className="fa-solid fa-plus text-green-500 cursor-pointer"
-                                onClick={() => addCard(card)}
-                            ></i>
-                        </div>
+                        {userCards &&
+                            <div className="flex items-center justify-between px-2">
+                                <i
+                                    className="fa-solid fa-minus text-red-500 cursor-pointer"
+                                    onClick={() => removeCard(card)}
+                                ></i>
+                                <p className="w-1/2 text-center">
+                                    {card.quantity ?? userCards?.[card.id] ?? 0}
+                                </p>
+                                <i
+                                    className="fa-solid fa-plus text-green-500 cursor-pointer"
+                                    onClick={() => addCard(card)}
+                                ></i>
+                            </div>}
                     </div>
                 </div>
             )}
@@ -78,27 +79,29 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
             <p className="text-sm">{card.set.name}</p>
             <div className="flex gap-1 items-center">
                 <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
-                <i
+                {favorites && <i
                     className={`cursor-pointer transition-all ${favorites[card.id]
                         ? "fa-solid fa-star text-yellow-400"
                         : "fa-regular fa-star text-gray-400"
                         }`}
                     onClick={() => toggleFavorite(card)}
-                ></i>
+                ></i>}
             </div>
-            <div className="flex items-center justify-between px-2">
-                <i
-                    className="fa-solid fa-minus text-red-500 cursor-pointer"
-                    onClick={() => removeCard(card)}
-                ></i>
-                <p className="w-1/2 text-center">
-                    {userCards[card.id] ?? 0}
-                </p>
-                <i
-                    className="fa-solid fa-plus text-green-500 cursor-pointer"
-                    onClick={() => addCard(card)}
-                ></i>
-            </div>
+            {userCards &&
+                <div className="flex items-center justify-between px-2">
+                    <i
+                        className="fa-solid fa-minus text-red-500 cursor-pointer"
+                        onClick={() => removeCard(card)}
+                    ></i>
+                    <p className="w-1/2 text-center">
+                        {card.quantity ?? userCards?.[card.id] ?? 0}
+                    </p>
+                    <i
+                        className="fa-solid fa-plus text-green-500 cursor-pointer"
+                        onClick={() => addCard(card)}
+                    ></i>
+                </div>}
+
         </div>
     )
 }
