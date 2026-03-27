@@ -43,7 +43,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                         </div>
                         <p className="shadow-xl border-gray-300 border py-4 text-center text-lg">{card.illustrator}</p>
                         {userCards &&
-                            <div className="flex items-center justify-between px-2">
+                            <div className="flex items-center justify-evenly px-2">
                                 <i
                                     className="fa-solid fa-minus text-red-500 cursor-pointer"
                                     onClick={() => removeCard(card)}
