@@ -21,7 +21,7 @@ const Header = () => {
     return (
         <header className="px-8 py-6 flex items-center justify-between bg-white shadow-xl fixed w-full z-50">
             <h1 className="text-amber-800 text-3xl font-medium">Pokollection</h1>
-            <div className="md:hidden">
+            <div className="lg:hidden">
                 <i
                     className={`fa-solid text-amber-800 ${menu ? "fa-xmark" : "fa-bars"} text-4xl cursor-pointer`}
                     onClick={toggleMenu}
@@ -29,8 +29,8 @@ const Header = () => {
             </div>
             <div
                 className={`fixed top-20 right-0 h-full w-6/12 bg-miniwidget flex flex-col items-end pr-8 gap-6 py-8
-  transform transition-transform duration-300 ease-in-out md:hidden bg-white text-amber-800
-  ${menu ? "translate-x-0" : "translate-x-full"}`}
+  transform transition-transform duration-300 ease-in-out lg:hidden bg-white text-amber-800
+  ${menu ? "translate-x-0" : "translate-x-full"} md:w-4/12`}
             >
                 <Link to="/cards">Cards</Link>
                 <Link to="/profile">Perfil</Link>

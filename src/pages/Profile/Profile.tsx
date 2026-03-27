@@ -133,7 +133,7 @@ const Profile = () => {
 
     return (
         <section className="pt-30 flex flex-col items-center">
-            <img src={userData?.avatar || profileImage} className="rounded-full w-1/2 absolute" />
+            <img src={userData?.avatar || profileImage} className="rounded-full w-60 absolute" />
             {editMenu && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     {/* Fundo embaçado */}
@@ -241,10 +241,10 @@ const Profile = () => {
                     </div>
                 </div>
             )}
-            <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-25 pt-30 w-full">
+            <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-30 pt-30 w-full">
                 <div className="flex items-center gap-2">
-                    <h3 className="text-2xl">{userData?.username}</h3>
-                    <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all" onClick={handleEditClick}></i>
+                    <h3 className="text-3xl">{userData?.username}</h3>
+                    <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all md:text-xl" onClick={handleEditClick}></i>
                 </div>
                 <p className="opacity-50">{userData?.email}</p>
                 <p>{userData?.bio || "Nenhuma informação"}</p>
@@ -258,15 +258,15 @@ const Profile = () => {
                     <ProfileCard>
                         <p className="h-1/2">Pokémon favorito</p>
                         <div className="flex justify-end items-end h-1/2">
-                            <p className="text-2xl text-amber-800 font-semibold">{userData?.favoritePokemon || "Nenhum"}</p>
+                            <p className="text-2xl md:text-4xl text-amber-800 font-semibold">{userData?.favoritePokemon || "Nenhum"}</p>
                         </div>
                     </ProfileCard>
                     <ProfileCard>
                         <p className="h-1/2">Tipo Favorito</p>
                         <div className="flex justify-end items-center h-1/2 gap-2">
-                            <p className="text-2xl text-amber-800 font-semibold">{userData?.favoriteType || "Nenhum"}</p>
+                            <p className="text-2xl md:text-4xl text-amber-800 font-semibold">{userData?.favoriteType || "Nenhum"}</p>
                             {
-                                types.find((type) => type.name == userData?.favoriteType) ? <img className="w-1/5" src={types.find((type) => type.name == userData?.favoriteType)?.image} /> : <></>
+                                types.find((type) => type.name == userData?.favoriteType) ? <img className="w-1/5 md:w-1/6" src={types.find((type) => type.name == userData?.favoriteType)?.image} /> : <></>
                             }
                             {/* <img className="w-1/4" src={types.find((type) => type.name == userData?.favoriteType)?.image} /> */}
                         </div>
@@ -274,16 +274,16 @@ const Profile = () => {
                     <ProfileCard>
                         <p className="h-1/2">Geração Favorita</p>
                         <div className="flex justify-end items-center h-1/2 gap-2">
-                            <p className="text-2xl text-amber-800 font-semibold">{userData?.favoriteGen || "Nenhuma"}</p>
+                            <p className="text-2xl md:text-4xl text-amber-800 font-semibold">{userData?.favoriteGen || "Nenhuma"}</p>
                         </div>
                     </ProfileCard>
                 </div>
                 <div className="flex gap-2 mt-4 mx-4 w-full items-center">
-                    <Link to="/favorites" className="flex border border-gray-300 text-xl px-4 py-2 ml-4 w-1/2 items-center justify-between">
+                    <Link to="/favorites" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 ml-4 w-1/2 items-center justify-between">
                         <p>Favoritos</p>
                         <i className="fa-solid fa-star text-amber-300"></i>
                     </Link>
-                    <Link to="/collection" className="flex border border-gray-300 text-xl px-4 py-2 mr-4 w-1/2 items-center justify-between">
+                    <Link to="/collection" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 mr-4 w-1/2 items-center justify-between">
                         <p>Coleção</p>
                         <i className="fa-solid fa-layer-group text-amber-800"></i></Link>
                 </div>

@@ -40,7 +40,7 @@ const Collection = () => {
 
     return (
         <section className="flex items-center pt-30 flex-col min-h-screen">
-            <h2 className="text-4xl font-medium text-amber-800 mt-4">Minha Coleção</h2>
+            <h2 className="text-4xl font-medium text-amber-800 mt-4 bg-white p-4 rounded-xl shadow-xl">Minha Coleção</h2>
             <div className="flex items-center pb-10 gap-3">
             </div>
             <div className="flex flex-wrap justify-center gap-6">
