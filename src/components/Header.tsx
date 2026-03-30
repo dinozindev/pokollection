@@ -27,6 +27,19 @@ const Header = () => {
                     onClick={toggleMenu}
                 />
             </div>
+            <div className="sm:hidden md:hidden lg:flex gap-4 items-center">
+                <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/cards">Cards</Link>
+                <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/profile">Perfil</Link>
+                <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/collection">Coleção</Link>
+                <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/favorites">Favoritos</Link>
+                {user ? <div className="border-solid rounded-md border px-3 py-2 text-amber-800 hover:text-black cursor-pointer transition-all" onClick={() => doSignOut()}>
+                    Logout
+                </div>
+                    : <Link to="/login">
+                        <div className="border-solid rounded-md border px-3 py-2 text-amber-800 hover:text-black cursor-pointer transition-all">
+                            Login
+                        </div></Link>}
+            </div>
             <div
                 className={`fixed top-20 right-0 h-full w-6/12 bg-miniwidget flex flex-col items-end pr-8 gap-6 py-8
   transform transition-transform duration-300 ease-in-out lg:hidden bg-white text-amber-800
@@ -36,11 +49,11 @@ const Header = () => {
                 <Link to="/profile">Perfil</Link>
                 <Link to="/collection">Coleção</Link>
                 <Link to="/favorites">Favoritos</Link>
-                {user ? <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-white transition-all" onClick={() => doSignOut()}>
+                {user ? <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-black cursor-pointer transition-all" onClick={() => doSignOut()}>
                     Logout
                 </div>
                     : <Link to="/login">
-                        <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-white transition-all">
+                        <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-black cursor-pointer transition-all">
                             Login
                         </div></Link>}
             </div>

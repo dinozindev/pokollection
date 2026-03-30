@@ -80,7 +80,7 @@ const Register = () => {
                 )}
                 <button
                     type="submit"
-                    className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800"
+                    className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800 hover:text-black hover:border-black transition-all cursor-pointer"
                 >
                     Cadastrar
                 </button>

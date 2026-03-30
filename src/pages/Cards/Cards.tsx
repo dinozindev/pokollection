@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CardDiv from "../../components/CardDiv";
 import { useCards } from "../../hooks/useCards";
 import { useFavorites } from "../../hooks/useFavorites";
+import type { CardUser } from "../../types/type";
 
 const Cards = () => {
 
@@ -26,6 +27,7 @@ const Cards = () => {
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
     const [favorites, setFavorites] = useState<Record<string, boolean>>({});
     const [showLoginWindow, setShowLoginWindow] = useState<boolean>(false);
+    const [loginMessage, setLoginMessage] = useState<string>("");
 
     const fetchCards = async () => {
         try {
@@ -54,6 +56,32 @@ const Cards = () => {
         e.preventDefault();
         setQuery(search);
     };
+
+    const requireAuth = (callback: () => void) => {
+    if (!user) {
+        setLoginMessage("Você precisa estar logado!");
+        setShowLoginWindow(true);
+
+        setTimeout(() => {
+            setShowLoginWindow(false);
+        }, 3000);
+
+        return;
+    }
+    callback();
+};
+
+    const handleAddCard = (card: CardUser) => {
+        requireAuth(() => addCard(card));
+    }
+
+    const handleRemoveCard = (card: CardUser) => {
+        requireAuth(() => removeCard(card));
+    }
+
+    const handleToggleFavorite = (card: Card) => {
+        requireAuth(() => toggleFavorite(card))
+    }
 
     useEffect(() => {
         if (!query) return;
@@ -98,6 +126,7 @@ const Cards = () => {
 
     useEffect(() => {
         if (location.state?.loggedIn) {
+            setLoginMessage("Logado com sucesso!");
             setShowLoginWindow(true);
 
             // limpa o state depois de usar
@@ -110,7 +139,7 @@ const Cards = () => {
     }, [location.state]);
 
     return (
-        <section className="flex items-center pt-30 flex-col min-h-screen">
+        <section className="flex items-center pt-30 lg:pt-40 flex-col min-h-screen">
             <div className="flex items-center pb-10 gap-3">
                 <SearchBar
                     value={search}
@@ -122,13 +151,13 @@ const Cards = () => {
             <div className="flex flex-wrap justify-center gap-6">
                 {cards.length !== 0 ? cards.map(card => (
                     // Componente de card
-                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={toggleFavorite} removeCard={removeCard} addCard={addCard} userCards={userCards}/>
+                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={handleToggleFavorite} removeCard={handleRemoveCard} addCard={handleAddCard} userCards={userCards}/>
                 )) : <p className="p-2 text-center">Nenhuma carta encontrada. <br></br>
                     Pesquise para encontrar a carta que deseja!</p>}
             </div>
             {showLoginWindow && (
-                <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-20">
-                    Login realizado com sucesso!
+                <div className="fixed bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-20">
+                    {loginMessage}
                 </div>
             )}
         </section>
