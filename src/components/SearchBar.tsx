@@ -17,7 +17,7 @@ const SearchBar = ({ value, onChange, onSubmit }: SearchBarProps) => {
                 />
                 <button
                     type="submit"
-                    className="bg-white p-2 rounded-r-2xl text-amber-800 md:p-3"
+                    className="bg-white p-2 rounded-r-2xl text-amber-800 md:p-3 cursor-pointer"
                 >
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </button>

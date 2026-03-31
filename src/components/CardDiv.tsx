@@ -51,8 +51,8 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                     <p className="text-lg">{card.set.name}</p>
                                     {card.set.symbol && <img className="w-1/10" src={`${card.set.symbol}.png`} />}
                                 </div>
-                                <p className="text-lg shadow-xl border-gray-300 border py-4 sm:hidden md:hidden lg:block text-center" >Total de Cartas no Set: {card.set.cardCount.total}</p>
-                                <p className="text-lg shadow-xl border-gray-300 border py-4 sm:hidden md:hidden lg:block text-center" >Raridade: {card.rarity}</p>
+                                <p className="text-lg shadow-xl border-gray-300 border py-4 hidden lg:block text-center" >Total de Cartas no Set: {card.set.cardCount.total}</p>
+                                <p className="text-lg shadow-xl border-gray-300 border py-4 hidden lg:block text-center" >Raridade: {card.rarity}</p>
                                 <p className="shadow-xl border-gray-300 border py-4 text-center text-lg">{card.illustrator ? card.illustrator : "Não informado"}</p>
                                 {userCards &&
                                     <div className="flex items-center justify-evenly px-2">

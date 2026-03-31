@@ -28,7 +28,7 @@ const Header = () => {
                     onClick={toggleMenu}
                 />
             </div>
-            <div className="sm:hidden md:hidden lg:flex gap-4 items-center">
+            <div className="hidden lg:flex gap-4 items-center">
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/cards">Cards</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/profile">Perfil</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/collection">Coleção</Link>
