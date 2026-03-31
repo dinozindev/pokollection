@@ -27,6 +27,7 @@ const Cards = () => {
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
     const [favorites, setFavorites] = useState<Record<string, boolean>>({});
     const [showLoginWindow, setShowLoginWindow] = useState<boolean>(false);
+    const [showErrorWindow, setErrorWindow] = useState<boolean>(false);
     const [loginMessage, setLoginMessage] = useState<string>("");
 
     const fetchCards = async () => {
@@ -59,11 +60,11 @@ const Cards = () => {
 
     const requireAuth = (callback: () => void) => {
     if (!user) {
-        setLoginMessage("Você precisa estar logado!");
-        setShowLoginWindow(true);
+        setLoginMessage("Você precisa estar logado para realizar essa ação!");
+        setErrorWindow(true);
 
         setTimeout(() => {
-            setShowLoginWindow(false);
+            setErrorWindow(false);
         }, 3000);
 
         return;
@@ -156,7 +157,12 @@ const Cards = () => {
                     Pesquise para encontrar a carta que deseja!</p>}
             </div>
             {showLoginWindow && (
-                <div className="fixed bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-20">
+                <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-20 transition-all">
+                    {loginMessage}
+                </div>
+            )}
+            {showErrorWindow && (
+                <div className="fixed bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-20 transition-all">
                     {loginMessage}
                 </div>
             )}

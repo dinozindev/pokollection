@@ -16,6 +16,7 @@ const Header = () => {
 
     const doSignOut = () => {
         firebase.signOut(auth);
+        window.location.reload()
     }
 
     return (
