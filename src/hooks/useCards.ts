@@ -21,7 +21,8 @@ export const useCards = () => {
                 illustrator: card.illustrator ?? "",
                 localId: card.localId,
                 set: card.set,
-                quantity: increment(1)
+                quantity: increment(1),
+                rarity: card.rarity
             },
             { merge: true }
         );

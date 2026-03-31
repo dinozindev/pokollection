@@ -28,7 +28,8 @@ export const useFavorites = () => {
                 image: card.image ?? "",
                 illustrator: card.illustrator ?? "",
                 localId: card.localId,
-                set: card.set
+                set: card.set,
+                rarity: card.rarity
             },
             { merge: true }
         );

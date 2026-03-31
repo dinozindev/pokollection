@@ -90,7 +90,8 @@ const Profile = () => {
                 favoritePokemon: userForm.favoritePokemon,
                 avatar: userForm.avatar,
                 bio: userForm.bio,
-                favoriteType: userForm.favoriteType
+                favoriteType: userForm.favoriteType,
+                favoriteGen: userForm.favoriteGen
             });
 
             setUserData((prev: any) => ({ ...prev, ...userForm }));

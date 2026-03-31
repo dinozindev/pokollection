@@ -26,6 +26,7 @@ export type CardUser = {
     name: string;
     quantity: number;
     set: Set;
+    rarity: string;
 }
 
 export type ProfileInfo = {
