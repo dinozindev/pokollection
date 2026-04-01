@@ -1,5 +1,6 @@
 import { useState } from "react";
 import placeholder from "../assets/card-placeholder.png"
+import PastaMenu from "./PastaMenu";
 
 type CardProps = {
     loadedImages: Record<string, boolean>;
@@ -10,11 +11,13 @@ type CardProps = {
     removeCard?: any;
     addCard?: any;
     userCards?: any;
+    addToPasta?: any;
 }
 
-const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards }: CardProps) => {
+const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToPasta }: CardProps) => {
 
     const [cardPreview, setCardPreview] = useState<boolean>();
+    const [pastaMenu, setPastaMenu] = useState<boolean>(false);
 
     return (
         <div className="w-5/12 lg:w-1/6 flex flex-col gap-1.5 justify-between shadow-xl bg-gray-100 px-2 py-4 rounded-md" key={card.id}>
@@ -86,9 +89,29 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                         }`}
                 />
             </div>
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
                 <h3>{card.name}</h3>
                 <i className="fa-solid fa-circle-info text-amber-800 hover:text-black hover:cursor-pointer transition-all" onClick={() => setCardPreview(true)}></i>
+            </div> */}
+            <div className="flex items-center justify-between">
+                <h3>{card.name}</h3>
+                <div className="flex items-center gap-2">
+                    {addToPasta && (
+                        <div className="relative">
+                            <i
+                                className="fa-solid fa-folder-plus text-amber-800 hover:text-black hover:cursor-pointer transition-all"
+                                onClick={() => setPastaMenu(true)}
+                            ></i>
+                            {pastaMenu && (
+                                <PastaMenu
+                                    card={card}
+                                    onClose={() => setPastaMenu(false)}
+                                />
+                            )}
+                        </div>
+                    )}
+                    <i className="fa-solid fa-circle-info text-amber-800 hover:text-black hover:cursor-pointer transition-all" onClick={() => setCardPreview(true)}></i>
+                </div>
             </div>
             <p className="text-sm">{card.set.name}</p>
             <div className="flex gap-1 items-center">

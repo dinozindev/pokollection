@@ -33,6 +33,7 @@ const Header = () => {
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/profile">Perfil</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/collection">Coleção</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/favorites">Favoritos</Link>
+                <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/binders">Pastas</Link>
                 {user ? <div className="border-solid rounded-md border px-3 py-2 text-amber-800 hover:text-black cursor-pointer transition-all" onClick={() => doSignOut()}>
                     Logout
                 </div>

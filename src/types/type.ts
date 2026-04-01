@@ -18,6 +18,11 @@ type Set = {
     symbol: string;
 }
 
+export type Binder = {
+    id: string;
+    nome: string;
+}
+
 export type CardUser = {
     id: string;
     illustrator: string;

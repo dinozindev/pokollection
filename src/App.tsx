@@ -9,6 +9,7 @@ import Profile from "./pages/Profile/Profile"
 import Collection from "./pages/Collection/Collection"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Favorites from "./pages/Favorites/Favorites"
+import Binders from "./pages/Binders/Binders"
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
           <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+          <Route path="/binders" element={<ProtectedRoute><Binders /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </>

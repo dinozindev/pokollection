@@ -272,7 +272,7 @@ const Cards = () => {
             <div className="flex flex-wrap justify-center gap-6">
                 {cards.length !== 0 ? cards.map(card => (
                     // Componente de card
-                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={handleToggleFavorite} removeCard={handleRemoveCard} addCard={handleAddCard} userCards={userCards} />
+                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={handleToggleFavorite} removeCard={handleRemoveCard} addCard={handleAddCard} userCards={userCards} addToPasta={!!user} />
                 )) : <p className="p-2 text-center">Nenhuma carta encontrada. <br></br>
                     Pesquise para encontrar a carta que deseja!</p>}
             </div>
