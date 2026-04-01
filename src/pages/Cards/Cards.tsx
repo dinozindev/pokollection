@@ -111,6 +111,7 @@ const Cards = () => {
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
+        setSet('')
         setQuery(search);
     };
 

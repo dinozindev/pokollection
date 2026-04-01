@@ -20,7 +20,7 @@ const Header = () => {
     }
 
     return (
-        <header className="px-8 py-6 flex items-center justify-between bg-white shadow-xl fixed w-full z-50">
+        <header className="px-8 py-6 flex items-center justify-between bg-white shadow-xl fixed w-screen z-50">
             <h1 className="text-amber-800 text-3xl font-medium">Pokollection</h1>
             <div className="lg:hidden">
                 <i
