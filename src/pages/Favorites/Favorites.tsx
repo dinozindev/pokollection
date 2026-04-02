@@ -52,7 +52,7 @@ const Favorites = () => {
   }, [user]);
 
   return (
-    <section className="flex items-center pt-30 flex-col min-h-screen">
+    <section className="flex items-center py-30 flex-col min-h-screen">
       <h2 className="text-4xl font-medium text-amber-800 mt-4 bg-white p-4 rounded-xl shadow-xl">Meus Favoritos</h2>
       <div className="flex items-center pb-10 gap-3">
       </div>
