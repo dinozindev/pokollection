@@ -23,6 +23,10 @@ export type Binder = {
     nome: string;
 }
 
+export type BinderWithCards = Binder & {
+    cartas: CardUser[];
+}
+
 export type CardUser = {
     id: string;
     illustrator: string;

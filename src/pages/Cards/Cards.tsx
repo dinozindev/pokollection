@@ -34,24 +34,27 @@ const Cards = () => {
     const [set, setSet] = useState<string>('');
     const [sets, setSets] = useState<string[]>([]);
 
+    const [showBinderWindow, setShowBinderWindow] = useState<boolean>(false);
+    const [binderMessage, setBinderMessage] = useState<string>("");
+
     // filtro de raridade (TODO)
     // const [rarity, setRarity] = useState<string>('');
     // const rarities = ["Rare Holo", "Common", "Rare", "Uncommon", "Holo Rare", "Special illustration rare"]
 
     // busca todos os nomes de sets e armazena em um estado
     const fetchSets = async () => {
-    try {
-        const data = await tcgdex.fetch('sets');
+        try {
+            const data = await tcgdex.fetch('sets');
 
-        const uniqueSets = Array.from(
-            new Set(data?.map((set: any) => set.name))
-        );
+            const uniqueSets = Array.from(
+                new Set(data?.map((set: any) => set.name))
+            );
 
-        setSets(uniqueSets);
-    } catch (error) {
-        console.log(error);
-    }
-};
+            setSets(uniqueSets);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     // busca as cartas com base no nome incluido na barra de pesquisa
     const fetchCards = async () => {
@@ -115,7 +118,7 @@ const Cards = () => {
         setQuery(search);
     };
 
-    const handleSubmitFilter = (e : any) => {
+    const handleSubmitFilter = (e: any) => {
         e.preventDefault();
         setSet(selectedSet);
     }
@@ -146,6 +149,12 @@ const Cards = () => {
     const handleToggleFavorite = (card: Card) => {
         requireAuth(() => toggleFavorite(card))
     }
+
+    const handleBinderSuccess = (message: string) => {
+        setBinderMessage(message);
+        setShowBinderWindow(true);
+        setTimeout(() => setShowBinderWindow(false), 3000);
+    };
 
     useEffect(() => {
         fetchSets()
@@ -248,11 +257,11 @@ const Cards = () => {
                                 name="gens"
                                 id="select__set"
                                 form="form__filter"
-                                onChange={(e) => setSelectedSet(e.target.value)}>    
-                                        <option value="" disabled selected hidden>-- Selecione um set --</option> 
-                                        {sets.map(set => (
-                                            <option key={set} value={set}>{set}</option>
-                                        ))}
+                                onChange={(e) => setSelectedSet(e.target.value)}>
+                                <option value="" disabled selected hidden>-- Selecione um set --</option>
+                                {sets.map(set => (
+                                    <option key={set} value={set}>{set}</option>
+                                ))}
                             </select>
                             <button
                                 type="submit"
@@ -272,7 +281,7 @@ const Cards = () => {
             <div className="flex flex-wrap justify-center gap-6">
                 {cards.length !== 0 ? cards.map(card => (
                     // Componente de card
-                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={handleToggleFavorite} removeCard={handleRemoveCard} addCard={handleAddCard} userCards={userCards} addToBinder={!!user} />
+                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={handleToggleFavorite} removeCard={handleRemoveCard} addCard={handleAddCard} userCards={userCards} addToBinder={!!user} onBinderSuccess={handleBinderSuccess}/>
                 )) : <p className="p-2 text-center">Nenhuma carta encontrada. <br></br>
                     Pesquise para encontrar a carta que deseja!</p>}
             </div>
@@ -284,6 +293,11 @@ const Cards = () => {
             {showErrorWindow && (
                 <div className="fixed bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-20 transition-all">
                     {loginMessage}
+                </div>
+            )}
+            {showBinderWindow && (
+                <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-20 transition-all">
+                    {binderMessage}
                 </div>
             )}
         </section>

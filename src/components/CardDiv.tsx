@@ -12,9 +12,10 @@ type CardProps = {
     addCard?: any;
     userCards?: any;
     addToBinder?: any;
+    onBinderSuccess?: (message: string) => void;
 }
 
-const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToBinder }: CardProps) => {
+const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToBinder, onBinderSuccess }: CardProps) => {
 
     const [cardPreview, setCardPreview] = useState<boolean>();
     const [binderMenu, setBinderMenu] = useState<boolean>(false);
@@ -106,6 +107,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                 <BinderMenu
                                     card={card}
                                     onClose={() => setBinderMenu(false)}
+                                    onSuccess={onBinderSuccess}
                                 />
                             )}
                         </div>

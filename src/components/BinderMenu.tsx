@@ -3,8 +3,8 @@ import { useBinders } from "../hooks/useBinders";
 import type { Binder } from "../types/type";
 import { AuthContext } from "../context/AuthContext";
 
-const BinderMenu = ({ card, onClose }: any) => {
-  const { fetchBinders, criarBinder, adicionarCartaNaBinder } = useBinders();
+const BinderMenu = ({ card, onClose, onSuccess }: any) => {
+  const { fetchBinders, criarBinder, adicionarCartaNaBinder,  } = useBinders();
   const [binders, setBinders] = useState<Binder[]>([]);
   const [novaBinder, setNovaBinder] = useState('');
   const [criando, setCriando] = useState(false);
@@ -17,9 +17,10 @@ const BinderMenu = ({ card, onClose }: any) => {
     });
   }, [user]);
 
-  const handleEscolherBinder = async (binderId: string) => {
+  const handleEscolherBinder = async (binderId: string, binderNome: string) => {
     await adicionarCartaNaBinder(binderId, card);
     onClose();
+    onSuccess?.(`${card.name} adicionado ao binder "${binderNome}"!`);
   };
 
   const handleCriarEAdicionar = async () => {
@@ -28,6 +29,7 @@ const BinderMenu = ({ card, onClose }: any) => {
     if (!docRef) return;
     await adicionarCartaNaBinder(docRef.id, card);
     onClose();
+    onSuccess?.(`${card.name} adicionado ao binder "${novaBinder}"!`);
   };
 
   return (
@@ -37,18 +39,18 @@ const BinderMenu = ({ card, onClose }: any) => {
         className="fixed inset-0 z-20"
         onClick={onClose}
       ></div>
-      <div className="absolute bg-white shadow-lg rounded-xl p-3 z-30 w-52">
+      <div className="absolute bg-white shadow-lg rounded-xl p-3 z-30 w-64">
         <p className="text-sm font-medium mb-2">Adicionar ao binder</p>
 
         {binders.map((binder: any) => (
-          <button key={binder.id} onClick={() => handleEscolherBinder(binder.id)}
-            className="w-full text-left px-2 py-1 hover:bg-amber-50 rounded text-sm">
+          <button key={binder.id} onClick={() => handleEscolherBinder(binder.id, binder.nome)}
+            className="w-full text-left px-2 py-1 hover:bg-amber-50 rounded text-sm cursor-pointer">
             {binder.nome}
           </button>
         ))}
 
         {criando ? (
-          <div className="flex gap-1 mt-2">
+          <div className="flex gap-2 mt-2">
             <input
               className="border rounded px-2 py-1 text-sm flex-1"
               placeholder="Nome do binder"
@@ -56,14 +58,14 @@ const BinderMenu = ({ card, onClose }: any) => {
               onChange={e => setNovaBinder(e.target.value)}
             />
             <button onClick={handleCriarEAdicionar}
-              className="text-amber-800 text-sm font-medium">
+              className="text-amber-800 text-sm font-medium cursor-pointer">
               Ok
             </button>
           </div>
         ) : (
           <button onClick={() => setCriando(true)}
-            className="w-full text-left px-2 py-1 mt-2 text-amber-800 text-sm border-t">
-            + Novo binder
+            className="w-full text-left px-2 py-1 mt-2 text-amber-800 text-sm border-t ">
+            <p className="mt-2 hover:bg-amber-50 hover:text-black transition-all cursor-pointer">+ Novo binder</p>
           </button>
         )}
       </div>
