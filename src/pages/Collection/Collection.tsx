@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, onSnapshot} from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import type { CardUser } from "../../types/type";
 import { useCards } from "../../hooks/useCards";
@@ -14,11 +14,20 @@ const Collection = () => {
     const [userCards, setUserCards] = useState<CardUser[]>([]);
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
+    const [showBinderWindow, setShowBinderWindow] = useState<boolean>(false);
+    const [binderMessage, setBinderMessage] = useState<string>("");
+
     const handleImageLoad = (id: string) => {
         setLoadedImages((prev) => ({
             ...prev,
             [id]: true
         }));
+    };
+
+    const handleBinderSuccess = (message: string) => {
+        setBinderMessage(message);
+        setShowBinderWindow(true);
+        setTimeout(() => setShowBinderWindow(false), 5000);
     };
 
     useEffect(() => {
@@ -33,7 +42,7 @@ const Collection = () => {
             setUserCards(cards);
         });
 
-        
+
         return () => unsubscribe();
     }, [user]);
 
@@ -45,9 +54,14 @@ const Collection = () => {
             </div>
             <div className={`flex flex-wrap justify-center gap-6 ${userCards.length === 1 ? "w-full" : ""}`}>
                 {userCards.length !== 0 ? userCards?.map(card => (
-                     <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} removeCard={removeCard} addCard={addCard} userCards={userCards}/>
+                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} removeCard={removeCard} addCard={addCard} userCards={userCards} addToBinder={!!user} onBinderSuccess={handleBinderSuccess} />
                 )) : <p>Nenhuma carta em sua coleção ainda!</p>}
             </div>
+            {showBinderWindow && (
+                <div className="fixed bg-white text-black px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl">
+                    {binderMessage}
+                </div>
+            )}
         </section>
     )
 }
