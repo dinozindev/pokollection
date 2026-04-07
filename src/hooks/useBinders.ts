@@ -10,6 +10,7 @@ export const useBinders = () => {
 
     const { addCard, removeCard } = useCards();
 
+    // retorna apenas o id e nome do binder para o BinderMenu
     const fetchBinders = async (): Promise<Binder[]> => {
         if (!user) return [];
 
@@ -18,6 +19,7 @@ export const useBinders = () => {
         return snap.docs.map(doc => ({ id: doc.id, ...(doc.data() as { nome: string }) }));
     };
 
+    // retorna um binder específico + cartas
     const fetchBinderWithCards = async (binderId: string): Promise<BinderWithCards | null> => {
         if (!user) return null;
 
@@ -40,6 +42,7 @@ export const useBinders = () => {
         };
     };
 
+    // retorna todos os binders + cartas
     const fetchAllBindersWithCards = async (): Promise<BinderWithCards[]> => {
         if (!user) return [];
 
@@ -74,7 +77,7 @@ export const useBinders = () => {
             criadoEm: serverTimestamp()
         });
 
-        return docRef; 
+        return docRef;
     };
 
     const deletarBinder = async (binderId: string) => {
@@ -86,10 +89,14 @@ export const useBinders = () => {
 
     };
 
-    const adicionarCartaNaBinder = async (binderId: string, card: CardUser) => {
+    const adicionarCartaNoBinder = async (binderId: string, card: CardUser) => {
         if (!user) return;
 
         const cartaRef = doc(db, "users", user.uid, "binders", binderId, "cartas", card.id);
+
+        const snapshot = await getDoc(cartaRef);
+
+        if (snapshot.exists()) return false;
 
         await setDoc(
             cartaRef,
@@ -105,10 +112,18 @@ export const useBinders = () => {
             { merge: true }
         );
 
-        addCard(card);
+        // verifica se a carta já está na coleção
+        const colecaoRef = doc(db, "users", user.uid, "cards", card.id);
+        const colecaoSnap = await getDoc(colecaoRef);
+
+        if (!colecaoSnap.exists()) {
+            await addCard(card);
+        }
+
+        return true;
     };
 
-    const removerCartaDaBinder = async (binderId: string, card: CardUser) => {
+    const removerCartaDoBinder = async (binderId: string, card: CardUser) => {
         if (!user) return;
 
         const cartaRef = doc(db, "users", user.uid, "binders", binderId, "cartas", card.id);
@@ -122,5 +137,5 @@ export const useBinders = () => {
         removeCard(card);
     };
 
-    return { fetchBinders, fetchBinderWithCards, fetchAllBindersWithCards, criarBinder, deletarBinder, adicionarCartaNaBinder, removerCartaDaBinder };
+    return { fetchBinders, fetchBinderWithCards, fetchAllBindersWithCards, criarBinder, deletarBinder, adicionarCartaNoBinder, removerCartaDoBinder };
 };

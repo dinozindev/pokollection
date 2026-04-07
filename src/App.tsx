@@ -10,6 +10,7 @@ import Collection from "./pages/Collection/Collection"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Favorites from "./pages/Favorites/Favorites"
 import Binders from "./pages/Binders/Binders"
+import BinderDetails from "./pages/BinderDetails/BinderDetails"
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
           <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
           <Route path="/binders" element={<ProtectedRoute><Binders /></ProtectedRoute>} />
+          <Route path="/binders/:id" element={<ProtectedRoute><BinderDetails /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </>

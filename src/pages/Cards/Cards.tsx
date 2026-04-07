@@ -153,7 +153,7 @@ const Cards = () => {
     const handleBinderSuccess = (message: string) => {
         setBinderMessage(message);
         setShowBinderWindow(true);
-        setTimeout(() => setShowBinderWindow(false), 3000);
+        setTimeout(() => setShowBinderWindow(false), 5000);
     };
 
     useEffect(() => {
@@ -286,17 +286,17 @@ const Cards = () => {
                     Pesquise para encontrar a carta que deseja!</p>}
             </div>
             {showLoginWindow && (
-                <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-20 transition-all">
+                <div className="fixed bg-green-500 text-white px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl">
                     {loginMessage}
                 </div>
             )}
             {showErrorWindow && (
-                <div className="fixed bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-20 transition-all">
+                <div className="fixed bg-red-500 text-white px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl">
                     {loginMessage}
                 </div>
             )}
             {showBinderWindow && (
-                <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-20 transition-all">
+                <div className="fixed bg-white text-black px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl">
                     {binderMessage}
                 </div>
             )}

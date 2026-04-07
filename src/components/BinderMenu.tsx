@@ -4,7 +4,7 @@ import type { Binder } from "../types/type";
 import { AuthContext } from "../context/AuthContext";
 
 const BinderMenu = ({ card, onClose, onSuccess }: any) => {
-  const { fetchBinders, criarBinder, adicionarCartaNaBinder,  } = useBinders();
+  const { fetchBinders, criarBinder, adicionarCartaNoBinder } = useBinders();
   const [binders, setBinders] = useState<Binder[]>([]);
   const [novaBinder, setNovaBinder] = useState('');
   const [criando, setCriando] = useState(false);
@@ -18,16 +18,20 @@ const BinderMenu = ({ card, onClose, onSuccess }: any) => {
   }, [user]);
 
   const handleEscolherBinder = async (binderId: string, binderNome: string) => {
-    await adicionarCartaNaBinder(binderId, card);
+    const adicionou = await adicionarCartaNoBinder(binderId, card);
     onClose();
-    onSuccess?.(`${card.name} adicionado ao binder "${binderNome}"!`);
-  };
+    if (adicionou) {
+        onSuccess?.(`${card.name} adicionado ao binder "${binderNome}"!`);
+    } else {
+        onSuccess?.(`${card.name} já está no binder "${binderNome}"!`);
+    }
+};
 
   const handleCriarEAdicionar = async () => {
     if (!novaBinder.trim()) return;
     const docRef = await criarBinder(novaBinder);
     if (!docRef) return;
-    await adicionarCartaNaBinder(docRef.id, card);
+    await adicionarCartaNoBinder(docRef.id, card);
     onClose();
     onSuccess?.(`${card.name} adicionado ao binder "${novaBinder}"!`);
   };

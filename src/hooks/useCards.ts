@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import type { CardUser } from "../types/type";
-import { deleteDoc, doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, increment, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
 export const useCards = () => {
-    const {user} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
 
     const addCard = async (card: CardUser) => {
         if (!user) return;
@@ -32,7 +32,6 @@ export const useCards = () => {
         if (!user) return;
 
         const cardRef = doc(db, "users", user.uid, "cards", card.id);
-
         const snapshot = await getDoc(cardRef);
 
         if (!snapshot.exists()) return;
@@ -41,13 +40,22 @@ export const useCards = () => {
 
         if (data.quantity <= 1) {
             await deleteDoc(cardRef);
+
+            // remove de todos os binders também
+            const bindersRef = collection(db, "users", user.uid, "binders");
+            const bindersSnap = await getDocs(bindersRef);
+
+            await Promise.all(
+                bindersSnap.docs.map(async (binderDoc) => {
+                    const cartaRef = doc(db, "users", user.uid, "binders", binderDoc.id, "cartas", card.id);
+                    const cartaSnap = await getDoc(cartaRef);
+                    if (cartaSnap.exists()) await deleteDoc(cartaRef);
+                })
+            );
         } else {
-            await updateDoc(cardRef, {
-                quantity: increment(-1)
-            });
+            await updateDoc(cardRef, { quantity: increment(-1) });
         }
     };
-
     return { addCard, removeCard }
 }
 
