@@ -8,7 +8,7 @@ import { useCards } from "./useCards";
 export const useBinders = () => {
     const { user } = useContext(AuthContext);
 
-    const { addCard, removeCard } = useCards();
+    const { addCard } = useCards();
 
     // retorna apenas o id e nome do binder para o BinderMenu
     const fetchBinders = async (): Promise<Binder[]> => {
@@ -123,7 +123,7 @@ export const useBinders = () => {
         return true;
     };
 
-    const removerCartaDoBinder = async (binderId: string, card: CardUser) => {
+    const removeCardFromBinder = async (binderId: string, card: CardUser) => {
         if (!user) return;
 
         const cartaRef = doc(db, "users", user.uid, "binders", binderId, "cartas", card.id);
@@ -133,9 +133,7 @@ export const useBinders = () => {
         if (!snapshot.exists()) return;
 
         await deleteDoc(cartaRef);
-
-        removeCard(card);
     };
 
-    return { fetchBinders, fetchBinderWithCards, fetchAllBindersWithCards, criarBinder, deletarBinder, adicionarCartaNoBinder, removerCartaDoBinder };
+    return { fetchBinders, fetchBinderWithCards, fetchAllBindersWithCards, criarBinder, deletarBinder, adicionarCartaNoBinder, removeCardFromBinder };
 };

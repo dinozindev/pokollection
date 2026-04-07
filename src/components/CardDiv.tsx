@@ -12,10 +12,12 @@ type CardProps = {
     addCard?: any;
     userCards?: any;
     addToBinder?: any;
+    removeFromBinder?: any;
+    binderId?: string;
     onBinderSuccess?: (message: string) => void;
 }
 
-const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToBinder, onBinderSuccess }: CardProps) => {
+const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToBinder, onBinderSuccess, removeFromBinder, binderId }: CardProps) => {
 
     const [cardPreview, setCardPreview] = useState<boolean>();
     const [binderMenu, setBinderMenu] = useState<boolean>(false);
@@ -58,7 +60,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                 <p className="text-lg shadow-xl border-gray-300 border py-4 hidden lg:block text-center" >Total de Cartas no Set: {card.set.cardCount.total}</p>
                                 <p className="text-lg shadow-xl border-gray-300 border py-4 hidden lg:block text-center" >Raridade: {card.rarity}</p>
                                 <p className="shadow-xl border-gray-300 border py-4 text-center text-lg">{card.illustrator ? card.illustrator : "Não informado"}</p>
-                                {userCards &&
+                                {addCard &&
                                     <div className="flex items-center justify-evenly px-2">
                                         <i
                                             className="fa-solid fa-minus text-red-500 cursor-pointer"
@@ -77,6 +79,10 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                     </div>
                 </div>
             )}
+            {removeFromBinder && 
+            <div className="flex justify-end mb-1">
+                <i className="fa-solid fa-xmark text-amber-800 hover:text-black transition-all cursor-pointer" onClick={() => removeFromBinder(binderId, card)}></i>
+            </div>}
             <div className="relative">
                 {!loadedImages[card.id] && (
                     <div className="absolute inset-0 rounded-md overflow-hidden bg-gray-300">
@@ -126,7 +132,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                     onClick={() => toggleFavorite(card)}
                 ></i>}
             </div>
-            {userCards &&
+            {addCard &&
                 <div className="flex items-center justify-between px-2">
                     <i
                         className="fa-solid fa-minus text-red-500 cursor-pointer"
