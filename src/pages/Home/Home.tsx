@@ -3,6 +3,7 @@ import CarrosselCards from "../../components/CarrosselCards"
 import { tcgdex } from "../../api/api";
 import { Query, type Card } from "@tcgdex/sdk";
 import { Link } from "react-router-dom";
+import HomeCard from "../../components/HomeCard";
 
 const Home = () => {
 
@@ -43,21 +44,15 @@ const Home = () => {
           <CarrosselCards cartas={cards} />
         </div>
         <div className="h-screen flex pt-20 px-30 items-center gap-4">
-          <div className="bg-white p-4 flex flex-col items-center shadow-2xl">
+          <HomeCard title="Adicione cartas a sua coleção!" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?">
             <i className="fa-solid fa-layer-group text-6xl text-amber-800"></i>
-            <h3 className="text-2xl font-medium">Adicione cartas a sua coleção!</h3>
-            <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?</p>
-          </div>
-          <div className="bg-white p-4 shadow-2xl flex flex-col items-center">
+          </HomeCard>
+          <HomeCard title="Favorite suas cartas mais queridas!" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?">
             <i className="fa-solid fa-star text-6xl text-yellow-500"></i>
-            <h3 className="text-2xl font-medium">Favorite suas cartas mais queridas!</h3>
-            <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?</p>
-          </div>
-          <div className="bg-white p-4 shadow-2xl flex flex-col items-center">
+          </HomeCard>
+          <HomeCard title="Crie Binders/Pastas para separar suas cartas!" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?">
             <i className="fa-solid fa-folder text-6xl"></i>
-            <h3 className="text-2xl font-medium">Crie Binders/Pastas para separar suas cartas!</h3>
-            <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?</p>
-          </div>
+          </HomeCard>
         </div>
       </section>
     </>
