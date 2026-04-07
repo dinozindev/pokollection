@@ -21,7 +21,9 @@ const Header = () => {
 
     return (
         <header className="px-8 py-6 flex items-center justify-between bg-white shadow-xl fixed w-screen z-50">
-            <h1 className="text-amber-800 text-3xl font-medium">Pokollection</h1>
+            <Link to="/">
+                <h1 className="text-amber-800 text-3xl font-medium">Pokollection</h1>
+            </Link>
             <div className="lg:hidden">
                 <i
                     className={`fa-solid text-amber-800 ${menu ? "fa-xmark" : "fa-bars"} text-4xl cursor-pointer`}

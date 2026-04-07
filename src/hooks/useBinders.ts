@@ -67,7 +67,7 @@ export const useBinders = () => {
         return binders;
     };
 
-    const criarBinder = async (nome: string) => {
+    const createBinder = async (nome: string) => {
         if (!user) return;
 
         const bindersRef = collection(db, "users", user.uid, "binders");
@@ -80,7 +80,7 @@ export const useBinders = () => {
         return docRef;
     };
 
-    const deletarBinder = async (binderId: string) => {
+    const removeBinder = async (binderId: string) => {
         if (!user) return;
 
         const binderRef = doc(db, "users", user.uid, "binders", binderId);
@@ -89,7 +89,7 @@ export const useBinders = () => {
 
     };
 
-    const adicionarCartaNoBinder = async (binderId: string, card: CardUser) => {
+    const addCardToBinder = async (binderId: string, card: CardUser) => {
         if (!user) return;
 
         const cartaRef = doc(db, "users", user.uid, "binders", binderId, "cartas", card.id);
@@ -135,5 +135,5 @@ export const useBinders = () => {
         await deleteDoc(cartaRef);
     };
 
-    return { fetchBinders, fetchBinderWithCards, fetchAllBindersWithCards, criarBinder, deletarBinder, adicionarCartaNoBinder, removeCardFromBinder };
+    return { fetchBinders, fetchBinderWithCards, fetchAllBindersWithCards, createBinder, removeBinder, addCardToBinder, removeCardFromBinder };
 };
