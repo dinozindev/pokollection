@@ -1,6 +1,7 @@
 import { useState } from "react";
 import placeholder from "../assets/card-placeholder.png"
 import BinderMenu from "./BinderMenu";
+import type { CardUser } from "../types/type";
 
 type CardProps = {
     loadedImages: Record<string, boolean>;
@@ -9,7 +10,7 @@ type CardProps = {
     favorites?: Record<string, boolean>;
     toggleFavorite?: any;
     removeCard?: any;
-    addCard?: any;
+    addCard?: (card: CardUser) => void;
     userCards?: any;
     addToBinder?: any;
     removeFromBinder?: any;

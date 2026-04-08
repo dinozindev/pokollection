@@ -1,4 +1,10 @@
-const CarrosselCards = ({ cartas }: any) => {
+import type { CardResume } from "@tcgdex/sdk";
+
+type CarrosselProps = {
+    cartas: CardResume[]
+}
+
+const CarrosselCards = ({ cartas } : CarrosselProps) => {
     return (
         <div className="overflow-hidden w-full">
             <div className="flex animate-marquee gap-4 w-max">

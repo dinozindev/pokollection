@@ -1,9 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { useBinders } from "../hooks/useBinders";
-import type { Binder } from "../types/type";
+import type { Binder, CardUser } from "../types/type";
 import { AuthContext } from "../context/AuthContext";
 
-const BinderMenu = ({ card, onClose, onSuccess }: any) => {
+type BinderMenuProps = {
+  card: CardUser;
+  onClose: () => void;
+  onSuccess: ((message: string) => void) | undefined
+}
+
+const BinderMenu = ( { card, onClose, onSuccess }: BinderMenuProps ) => {
   const { fetchBinders, createBinder, addCardToBinder } = useBinders();
   const [binders, setBinders] = useState<Binder[]>([]);
   const [novaBinder, setNovaBinder] = useState('');
