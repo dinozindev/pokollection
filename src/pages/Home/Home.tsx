@@ -45,13 +45,13 @@ const Home = () => {
         </div>
         <div className="h-screen flex pt-20 px-30 items-center gap-4">
           <HomeCard title="Adicione cartas a sua coleção!" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?">
-            <i className="fa-solid fa-layer-group text-6xl text-amber-800"></i>
+            <i className="fa-solid fa-layer-group text-8xl text-amber-800"></i>
           </HomeCard>
           <HomeCard title="Favorite suas cartas mais queridas!" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?">
-            <i className="fa-solid fa-star text-6xl text-yellow-500"></i>
+            <i className="fa-solid fa-star text-8xl text-yellow-500"></i>
           </HomeCard>
           <HomeCard title="Crie Binders/Pastas para separar suas cartas!" description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius modi accusamus illo tenetur blanditiis voluptatem nemo, temporibus reiciendis? Nostrum harum cupiditate eaque pariatur veritatis assumenda saepe eligendi vitae laudantium praesentium?">
-            <i className="fa-solid fa-folder text-6xl"></i>
+            <i className="fa-solid fa-folder text-8xl"></i>
           </HomeCard>
         </div>
       </section>
