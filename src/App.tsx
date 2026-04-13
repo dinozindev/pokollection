@@ -11,8 +11,15 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import Favorites from "./pages/Favorites/Favorites"
 import Binders from "./pages/Binders/Binders"
 import BinderDetails from "./pages/BinderDetails/BinderDetails"
+import { useEffect } from "react"
+import { limparCacheExpirado } from "./utils/storage"
 
 const App = () => {
+
+useEffect(() => {
+    limparCacheExpirado();
+}, []);
+
   return (
     <>
       <AuthProvider>
