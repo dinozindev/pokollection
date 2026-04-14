@@ -43,7 +43,7 @@ const Home = () => {
         <div className="pb-40">
           <CarrosselCards cartas={cards} />
         </div>
-        <div className="flex flex-col md:flex-row py-20 px-10 lg:px-30 gap-4 w-full">
+        <div className="flex flex-col md:flex-row py-20 px-10 lg:px-30 gap-6 w-full">
           <HomeCard title="Adicione cartas a sua coleção!" description="Adicione suas cartas físicas e digitais em segundos. Seu catálogo pessoal, disponível onde quer que você esteja.">
             <i className="fa-solid fa-layer-group text-6xl lg:text-8xl text-amber-800"></i>
           </HomeCard>

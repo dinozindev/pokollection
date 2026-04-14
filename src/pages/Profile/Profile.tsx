@@ -39,6 +39,11 @@ const Profile = () => {
 
     }
 
+    // gerencia o tipo favorito do usuário
+    const selectedType = types.find(
+        (t) => t.name.trim().toLowerCase() === userData?.favoriteType?.trim().toLowerCase()
+    );
+
     // Preenche os dados automaticamente com os existentes no banco de dados
     const handleEditClick = () => {
         setUserForm({
@@ -46,7 +51,7 @@ const Profile = () => {
             favoritePokemon: userData?.favoritePokemon || "",
             avatar: userData?.avatar || "",
             bio: userData?.bio || "",
-            favoriteType: userData?.bio || "",
+            favoriteType: userData?.favoriteType || "",
             favoriteGen: userData?.favoriteGen || ""
         });
         setEditMenu(true);
@@ -134,7 +139,13 @@ const Profile = () => {
 
     return (
         <section className="pt-30 flex flex-col items-center">
-            <img src={userData?.avatar || profileImage} className="rounded-full w-60 absolute" />
+            <div className="relative w-60 h-60 min-w-60 min-h-60 top-55">
+                <img
+                    src={userData?.avatar || profileImage}
+                    className="rounded-full w-full h-full object-cover shadow-lg border-4 border-white"
+                    alt="Profile Avatar"
+                />
+            </div>
             {editMenu && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     {/* Fundo embaçado */}
@@ -147,7 +158,7 @@ const Profile = () => {
                         <div className="flex justify-between items-center">
                             <p className="text-xl">Editar Perfil</p>
                             <i
-                                className="fa-solid fa-xmark text-2xl cursor-pointer"
+                                className="fa-solid fa-xmark text-2xl cursor-pointer hover:text-amber-800 transition-all"
                                 onClick={() => setEditMenu(false)}
                             ></i>
                         </div>
@@ -180,7 +191,12 @@ const Profile = () => {
                                 id="input__profilepicture"
                                 type="file"
                                 accept="image/png, image/jpeg"
-                                className="border p-2 rounded"
+                                className="block w-full text-sm text-gray-500
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-lg file:border-2
+                                        file:text-sm file:font-semibold
+                                        file:border-amber-800 file:text-amber-800
+                                        hover:file:text-black hover:file:border-black transition-all file:cursor-pointer"
                                 onChange={handleImageChange}
                             />
                             <label htmlFor="input__bio">Bio</label>
@@ -201,40 +217,45 @@ const Profile = () => {
                                 name="types"
                                 id="select__type"
                                 form="form__update"
+                                value={userForm.favoriteType || ""} 
                                 onChange={(e) => setUserForm({
                                     ...userForm,
                                     favoriteType: e.target.value
-                                })}>
-                                    <option value="" disabled selected hidden>-- Selecione um tipo --</option> 
-                                {types.map(type => {
-                                    return (
-                                        <option key={type.name} value={type.name}>{type.name}</option>
-                                    )
                                 })}
+                                className="border p-2 rounded"
+                            >
+                                <option value="" disabled selected hidden>-- Selecione um tipo --</option>
+                                {types.map(type => (
+                                    <option key={type.name} value={type.name}>
+                                        {type.name}
+                                    </option>
+                                ))}
                             </select>
                             <label htmlFor="select__gen">Geração Favorita</label>
                             <select
                                 name="gens"
                                 id="select__gen"
                                 form="form__update"
+                                value={userForm.favoriteGen || ""}
                                 onChange={(e) => setUserForm({
                                     ...userForm,
                                     favoriteGen: e.target.value
-                                })}>    
-                                        <option value="" disabled selected hidden>-- Selecione uma geração --</option> 
-                                        <option key="gen1" value="Gen I">Gen I (Kanto)</option>
-                                        <option key="gen2" value="Gen II">Gen II (Johto)</option>
-                                        <option key="gen3" value="Gen III">Gen III (Hoenn)</option>
-                                        <option key="gen4" value="Gen IV">Gen IV (Sinnoh)</option>
-                                        <option key="gen5" value="Gen V">Gen V (Unova)</option>
-                                        <option key="gen6" value="Gen VI">Gen VI (Kalos)</option>
-                                        <option key="gen7" value="Gen VII">Gen VII (Alola)</option>
-                                        <option key="gen8" value="Gen VIII">Gen VIII (Galar)</option>
-                                        <option key="gen9" value="Gen IX">Gen IX (Paldea)</option>
+                                })}
+                                className="border p-2 rounded">
+                                <option value="" disabled selected hidden>-- Selecione uma geração --</option>
+                                <option key="gen1" value="Gen I">Gen I (Kanto)</option>
+                                <option key="gen2" value="Gen II">Gen II (Johto)</option>
+                                <option key="gen3" value="Gen III">Gen III (Hoenn)</option>
+                                <option key="gen4" value="Gen IV">Gen IV (Sinnoh)</option>
+                                <option key="gen5" value="Gen V">Gen V (Unova)</option>
+                                <option key="gen6" value="Gen VI">Gen VI (Kalos)</option>
+                                <option key="gen7" value="Gen VII">Gen VII (Alola)</option>
+                                <option key="gen8" value="Gen VIII">Gen VIII (Galar)</option>
+                                <option key="gen9" value="Gen IX">Gen IX (Paldea)</option>
                             </select>
                             <button
                                 type="submit"
-                                className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800"
+                                className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800 cursor-pointer hover:text-black hover:border-black transition-all"
                             >
                                 Atualizar perfil
                             </button>
@@ -265,11 +286,16 @@ const Profile = () => {
                     <ProfileCard>
                         <p className="h-1/2">Tipo Favorito</p>
                         <div className="flex justify-end items-center h-1/2 gap-2">
-                            <p className="text-2xl md:text-4xl text-amber-800 font-semibold">{userData?.favoriteType || "Nenhum"}</p>
-                            {
-                                types.find((type) => type.name == userData?.favoriteType) ? <img className="w-1/5 md:w-1/6" src={types.find((type) => type.name == userData?.favoriteType)?.image} /> : <></>
-                            }
-                            {/* <img className="w-1/4" src={types.find((type) => type.name == userData?.favoriteType)?.image} /> */}
+                            <p className="text-2xl md:text-4xl text-amber-800 font-semibold">
+                                {userData?.favoriteType || "Nenhum"}
+                            </p>
+                            {selectedType && (
+                                <img
+                                    className="w-10 md:w-12 object-contain"
+                                    src={selectedType.image}
+                                    alt={selectedType.name}
+                                />
+                            )}
                         </div>
                     </ProfileCard>
                     <ProfileCard>

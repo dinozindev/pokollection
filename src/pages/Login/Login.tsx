@@ -15,40 +15,42 @@ const Login = () => {
 
   // Realiza o Login no Firebase e retorna para a tela de Cards
   const doLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); 
-          try {
-              const response = await firebase.signInWithEmailAndPassword(
-                  auth,
-                  user.email,
-                  user.password
-              );
-              console.log(response.user);
-              setError(false);
-              // passa o estado de loggedIn para aparecer o Toast
-              navigate("/cards", {state: {loggedIn: true}});
-          } catch (error) {
-              console.error(error);
-              setError(true);
-          }
-      };
+    e.preventDefault();
+    try {
+      const response = await firebase.signInWithEmailAndPassword(
+        auth,
+        user.email,
+        user.password
+      );
+      console.log(response.user);
+      setError(false);
+      // passa o estado de loggedIn para aparecer o Toast
+      navigate("/cards", { state: { loggedIn: true } });
+    } catch (error) {
+      console.error(error);
+      setError(true);
+    }
+  };
 
   return (
     <section className="flex flex-col justify-center items-center h-screen">
       <h2 className="text-3xl">Login</h2>
-      <form onSubmit={doLogin} className="flex flex-col py-8 gap-3 w-2/3">
+      <form onSubmit={doLogin} className="flex flex-col py-8 gap-3 w-2/3 lg:w-1/4">
         <label htmlFor="input__email">Email</label>
-        <input id="input__email" className="border rounded-xl px-2 py-1" type="text" value={user.email} onChange={(e) => setUser({...user, email: e.target.value})} />
+        <input id="input__email" className="border rounded-xl px-2 py-1" type="text" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} />
         <label htmlFor="input__senha">Senha</label>
-        <input id="input__senha" className="border rounded-xl px-2 py-1" type="password" value={user.password} onChange={(e) => setUser({...user, password: e.target.value})} />
+        <input id="input__senha" className="border rounded-xl px-2 py-1" type="password" value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
         {error && (
-                    <span className="text-red-500">E-mail ou senha incorreto(s).</span>
-                )}
-        <button
-          type="submit"
-          className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800 hover:text-black hover:border-black transition-all cursor-pointer"
-        >
-          Login
-        </button>
+          <span className="text-red-500">E-mail ou senha incorreto(s).</span>
+        )}
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800 hover:text-black hover:border-black transition-all cursor-pointer w-2/4"
+          >
+            Login
+          </button>
+        </div>
       </form>
       <p>Não possui cadastro? <Link to="/register" className="text-amber-800 hover:text-black transition-all">Cadastre-se!</Link></p>
     </section>

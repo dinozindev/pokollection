@@ -20,7 +20,7 @@ const Header = () => {
     }
 
     return (
-        <header className="px-8 py-6 flex items-center justify-between bg-white shadow-xl fixed w-screen z-50">
+        <header className="px-12 py-6 flex items-center justify-between bg-white shadow-xl fixed w-screen z-50">
             <Link to="/">
                 <h1 className="text-amber-800 text-3xl font-medium">Pokollection</h1>
             </Link>
@@ -30,7 +30,7 @@ const Header = () => {
                     onClick={toggleMenu}
                 />
             </div>
-            <div className="hidden lg:flex gap-4 items-center">
+            <div className="hidden lg:flex gap-8 items-center">
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/cards">Cards</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/profile">Perfil</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/collection">Coleção</Link>
@@ -39,10 +39,12 @@ const Header = () => {
                 {user ? <div className="border-solid rounded-md border px-3 py-2 text-amber-800 hover:text-black cursor-pointer transition-all" onClick={() => doSignOut()}>
                     Logout
                 </div>
-                    : <Link to="/login">
-                        <div className="border-solid rounded-md border px-3 py-2 text-amber-800 hover:text-black cursor-pointer transition-all">
+                    :
+                    <Link to="/login" className="w-1/2">
+                        <div className="border-solid rounded-md border px-6 py-2 text-amber-800 hover:text-black cursor-pointer transition-all text-center">
                             Login
-                        </div></Link>}
+                        </div></Link>
+                }
             </div>
             <div
                 className={`fixed top-20 right-0 h-full w-6/12 bg-miniwidget flex flex-col items-end pr-8 gap-6 py-8
