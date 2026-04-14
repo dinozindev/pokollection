@@ -126,7 +126,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
             <div className="flex gap-1 items-center">
                 <p className="text-sm">{card.localId} / {card.set.cardCount.official}</p>
                 {favorites && <i
-                    className={`cursor-pointer transition-all ${favorites[card.id]
+                    className={`cursor-pointer transition-all hover:text-yellow-300 ${favorites[card.id]
                         ? "fa-solid fa-star text-yellow-400"
                         : "fa-regular fa-star text-gray-400"
                         }`}
