@@ -13,6 +13,7 @@ const CarrosselCards = ({ cartas } : CarrosselProps) => {
                         key={index}
                         src={`${carta.image}/low.png`}
                         className="flex-none w-36 rounded-lg"
+                        loading="lazy"
                     />
                 ))}
             </div>
