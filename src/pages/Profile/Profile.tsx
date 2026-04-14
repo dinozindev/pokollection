@@ -21,7 +21,7 @@ const Profile = () => {
         favoriteGen: ""
     });
     const [userData, setUserData] = useState<any>();
-    const [userCards, setUserCards] = useState<CardUser[]>([]);
+    // const [userCards, setUserCards] = useState<CardUser[]>([]);
     const [cardCount, setCardCount] = useState<number>(0);
     const [editMenu, setEditMenu] = useState<boolean>(false);
     const [showUpdate, setShowUpdate] = useState<boolean>(false);
@@ -127,7 +127,7 @@ const Profile = () => {
                 ...(doc.data() as CardUser),
                 id: doc.id
             }));
-            setUserCards(cards);
+            // setUserCards(cards);
 
             const total = cards.reduce((sum, card) => sum + (card.quantity ?? 0), 0);
             setCardCount(total);
