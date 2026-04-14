@@ -12,12 +12,27 @@ import Favorites from "./pages/Favorites/Favorites"
 import Binders from "./pages/Binders/Binders"
 import BinderDetails from "./pages/BinderDetails/BinderDetails"
 import { useEffect } from "react"
-import { limparCacheExpirado } from "./utils/storage"
+import { limparCacheExpirado, limparCacheMaisAntigo } from "./utils/storage"
 
 const App = () => {
 
+
 useEffect(() => {
     limparCacheExpirado();
+    // verifica o uso do localStorage e limpa se estiver perto do limite
+    const verificarLimite = () => {
+        const total = Object.keys(localStorage)
+            .filter(key => key.startsWith('@tcgdex-cache/'))
+            .reduce((acc, key) => acc + (localStorage.getItem(key)?.length || 0), 0);
+
+        const limiteAproximado = 4 * 1024 * 1024; // 4MB de segurança antes dos 5MB
+
+        if (total > limiteAproximado) {
+            limparCacheMaisAntigo();
+        }
+    };
+
+    verificarLimite();
 }, []);
 
   return (
