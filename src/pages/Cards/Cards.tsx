@@ -49,7 +49,6 @@ const Cards = () => {
             const uniqueSets = Array.from(
                 new Set(data?.map((set: any) => set.name))
             );
-
             setSets(uniqueSets);
         } catch (error) {
             console.log(error);
@@ -67,7 +66,7 @@ const Cards = () => {
                 cardsResume.map(card => tcgdex.card.get(card.id))
             );
             setCards(cardsList);
-            console.log(cardsList);
+            // console.log(cardsList);
         } catch (error) {
             console.log(error)
         }

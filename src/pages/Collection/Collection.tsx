@@ -10,10 +10,8 @@ const Collection = () => {
 
     const { user } = useContext(AuthContext);
     const { addCard, removeCard } = useCards();
-
     const [userCards, setUserCards] = useState<CardUser[]>([]);
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-
     const [showBinderWindow, setShowBinderWindow] = useState<boolean>(false);
     const [binderMessage, setBinderMessage] = useState<string>("");
 

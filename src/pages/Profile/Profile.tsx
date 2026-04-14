@@ -175,7 +175,7 @@ const Profile = () => {
                                     })
                                 }
                             />
-                            <label htmlFor="input__profilepicture">Imagem de Perfil</label>
+                            <label htmlFor="input__profilepicture">Imagem de Perfil (.png ou .jpeg)</label>
                             <input
                                 id="input__profilepicture"
                                 type="file"

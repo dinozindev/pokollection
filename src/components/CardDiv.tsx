@@ -80,10 +80,10 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                     </div>
                 </div>
             )}
-            {removeFromBinder && 
-            <div className="flex justify-end mb-1">
-                <i className="fa-solid fa-xmark text-amber-800 hover:text-black transition-all cursor-pointer" onClick={() => removeFromBinder(binderId, card)}></i>
-            </div>}
+            {removeFromBinder &&
+                <div className="flex justify-end mb-1">
+                    <i className="fa-solid fa-xmark text-amber-800 hover:text-black transition-all cursor-pointer" onClick={() => removeFromBinder(binderId, card)}></i>
+                </div>}
             <div className="relative">
                 {!loadedImages[card.id] && (
                     <div className="absolute inset-0 rounded-md overflow-hidden bg-gray-300">
@@ -93,8 +93,8 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                 <img
                     src={card.image ? `${card.image}/high.png` : placeholder}
                     onLoad={() => handleImageLoad(card.id)}
-                    className={`w-full transition-opacity duration-300 ${loadedImages[card.id] ? "opacity-100" : "opacity-0"
-                        }`}
+                    onError={() => handleImageLoad(card.id)} 
+                    className={`w-full transition-opacity duration-300 ${loadedImages[card.id] ? "opacity-100" : "opacity-0"}`}
                 />
             </div>
             {/* <div className="flex items-center justify-between">
