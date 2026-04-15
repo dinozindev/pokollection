@@ -1,6 +1,6 @@
 # Pokollection
 
-A website / application where users are able to create an account, search for pokemon cards from the TCGDex API, create a Collection, save Favorite cards, build different binders with different cards and share their profile.
+A website / application where users are able to create an account, search for pokemon cards from the [TCGDex API](https://tcgdex.dev/), create a Collection, save Favorite cards, build different binders with different cards and share their profile.
 
 Cards contain informations like:
 - Image
