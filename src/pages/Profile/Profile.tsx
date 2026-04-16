@@ -40,9 +40,9 @@ const Profile = () => {
     }
 
     // gerencia o tipo favorito do usuário
-    const selectedType = types.find(
-        (t) => t.name.trim().toLowerCase() === userData?.favoriteType?.trim().toLowerCase()
-    );
+    // const selectedType = types.find(
+    //     (t) => t.name.trim().toLowerCase() === userData?.favoriteType?.trim().toLowerCase()
+    // );
 
     // Preenche os dados automaticamente com os existentes no banco de dados
     const handleEditClick = () => {
@@ -289,13 +289,13 @@ const Profile = () => {
                             <p className="text-2xl md:text-4xl text-amber-800 font-semibold">
                                 {userData?.favoriteType || "Nenhum"}
                             </p>
-                            {selectedType && (
+                            {/* {selectedType && (
                                 <img
                                     className="w-10 md:w-12 object-contain"
                                     src={selectedType.image}
                                     alt={selectedType.name}
                                 />
-                            )}
+                            )} */}
                         </div>
                     </ProfileCard>
                     <ProfileCard>

@@ -11,7 +11,6 @@ const Binders = () => {
   const { fetchAllBindersWithCards } = useBinders();
   const [binders, setBinders] = useState<BinderWithCards[]>([]);
 
-
   const { user } = useContext(AuthContext);
 
   useEffect(() => {
