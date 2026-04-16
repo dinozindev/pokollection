@@ -3,26 +3,31 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useBinders } from "../../hooks/useBinders";
 import { AuthContext } from "../../context/AuthContext";
 import type { Binder, BinderWithCards, CardUser } from "../../types/type";
-import CardDiv from "../../components/CardDiv";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
+import placeholder from "../../assets/card-placeholder.png";
 
 const BinderDetails = () => {
     const { id } = useParams();
     const { user } = useContext(AuthContext);
     const { removeCardFromBinder, removeBinder } = useBinders();
-    const [binder, setBinder] = useState<BinderWithCards | null>(null);
-    const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+    const [binder, setBinder] = useState<BinderWithCards>();
     const [binderDelete, setBinderDelete] = useState<boolean>(false);
     const navigate = useNavigate();
+    // estado da página atual
+    const [currentPage, setCurrentPage] = useState(0);
+    // quantidade de cartas por página
+    const cardsPerPage = 9;
+    // Calcula quais cartas mostrar na página atual
+    const startIndex = currentPage * cardsPerPage;
+    // define as cartas visíveis na página atual
+    const visibleCards = binder?.cartas?.slice(startIndex, startIndex + cardsPerPage) || [];
+    // Calcula quantos espaços vazios faltam para completar a grade de 9
+    const emptySlots = Math.max(0, cardsPerPage - visibleCards.length);
+    // Total de páginas
+    const totalPages = Math.ceil((binder?.cartas?.length || 0) / cardsPerPage);
 
-    const handleImageLoad = (id: string) => {
-        setLoadedImages((prev) => ({
-            ...prev,
-            [id]: true
-        }));
-    };
-
+    // controla a remoção do binder
     const handleBinderDelete = () => {
         if (!binder) return;
 
@@ -61,6 +66,7 @@ const BinderDetails = () => {
 
     return (
         <section className="flex items-center py-30 flex-col min-h-screen">
+
             {binderDelete && (
                 <div className="fixed inset-0 flex items-center justify-center z-50">
                     {/* Fundo embaçado */}
@@ -68,7 +74,7 @@ const BinderDetails = () => {
                         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
                         onClick={() => setBinderDelete(false)}
                     ></div>
-                    {/* Pop-up de edição */}
+                    {/* Pop-up de remoção */}
                     <div className="relative bg-white w-4/5 max-w-md p-8 rounded-2xl shadow-lg z-10 text-center flex flex-col items-center gap-4">
                         <p>Deseja realmente remover o binder?<br></br>Essa ação não pode ser revertida.</p>
                         <div className="flex items-center gap-4">
@@ -91,10 +97,58 @@ const BinderDetails = () => {
             </div>
             <div className="flex items-center pb-10 gap-3">
             </div>
-            <div className={`flex flex-wrap justify-center gap-6 ${binder.cartas.length === 1 ? "w-full" : ""}`}>
-                {binder.cartas.length !== 0 ? binder.cartas.map(card => (
-                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} removeFromBinder={removeCardFromBinder} binderId={binder.id} userCards={binder.cartas} />
-                )) : <p>Nenhuma carta em seu binder ainda!</p>}
+            <div className="group bg-slate-50 p-5 w-full sm:w-1/2 lg:w-4/10 flex flex-col items-center gap-6 rounded-2xl border border-slate-200">
+                {/* Grid de Cartas */}
+                <div className="grid grid-cols-3 gap-2 bg-slate-200 p-2 rounded-lg shadow-inner w-full">
+                    {visibleCards.map((carta, index) => (
+
+                        <div key={index} className="relative w-full aspect-7/10 overflow-hidden rounded-md shadow-sm bg-white">
+                            <img
+                                className="w-full h-full object-cover"
+                                src={carta.image ? `${carta.image}/high.png` : placeholder}
+                                alt="Pokémon Card"
+                            />
+                            <div className="absolute top-1 right-1 z-10 bg-white/70 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">
+                                <i
+                                    className="fa-solid fa-xmark text-amber-800 hover:text-black transition-all cursor-pointer"
+                                    onClick={() => removeCardFromBinder(binder.id, carta)}
+                                ></i>
+                            </div>
+                        </div>
+
+                    ))}
+
+                    {/* Espaços Vazios (Placeholders) */}
+                    {Array.from({ length: emptySlots }).map((_, i) => (
+                        <div
+                            key={`empty-${i}`}
+                            className="w-full aspect-7/10 bg-slate-300/50 border-2 border-dashed border-slate-400/30 rounded-md"
+                        ></div>
+                    ))}
+                </div>
+
+                {/* Controles de Paginação */}
+                <div className="flex items-center gap-6 mt-2">
+                    <button
+                        disabled={currentPage === 0}
+                        onClick={() => setCurrentPage(prev => prev - 1)}
+                        className="disabled:opacity-30 disabled:cursor-not-allowed hover:text-amber-800 transition-colors cursor-pointer"
+                    >
+                        <i className="fa-solid fa-circle-chevron-left text-3xl"></i>
+                    </button>
+
+                    <span className="font-bold text-slate-600">
+                        Página {currentPage + 1} de {Math.max(1, totalPages)}
+                    </span>
+
+                    <button
+                        disabled={currentPage >= totalPages - 1}
+                        onClick={() => setCurrentPage(prev => prev + 1)}
+                        className="disabled:opacity-30 disabled:cursor-not-allowed hover:text-amber-800 transition-colors cursor-pointer"
+                    >
+                        <i className="fa-solid fa-circle-chevron-right text-3xl"></i>
+                    </button>
+                </div>
             </div>
         </section>
     )
