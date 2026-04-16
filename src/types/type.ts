@@ -25,6 +25,7 @@ export type Binder = {
 
 export type BinderWithCards = Binder & {
     cartas: CardUser[];
+    color?: string;
 }
 
 export type CardUser = {

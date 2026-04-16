@@ -2,14 +2,16 @@ import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../context/AuthContext"
 import { useBinders } from "../../hooks/useBinders";
 import type { BinderWithCards } from "../../types/type";
-import { Link } from "react-router-dom";
-import placeholder from "../../assets/card-placeholder.png";
+import BinderCard from "../../components/BinderCard";
 
 
 const Binders = () => {
 
-  const { fetchAllBindersWithCards } = useBinders();
+  const { fetchAllBindersWithCards, createBinder } = useBinders();
   const [binders, setBinders] = useState<BinderWithCards[]>([]);
+  const [binderWindow, setBinderWindow] = useState<boolean>(false);
+  const [binderName, setBinderName] = useState<string>("");
+  const [show, setShow] = useState<boolean>(false);
 
   const { user } = useContext(AuthContext);
 
@@ -19,46 +21,81 @@ const Binders = () => {
     });
   }, [user]);
 
+  const handleCreateBinder = async (nome: string) => {
+    await createBinder(nome);
+
+    const result = await fetchAllBindersWithCards();
+    if (result) setBinders(result);
+
+    setBinderWindow(false);
+    setShow(true);
+    setBinderName("");
+
+    setTimeout(() => {
+      setShow(false);
+    }, 3000)
+  }
+
   return (
     <section className="flex items-center py-30 flex-col min-h-screen">
-      <h2 className="text-4xl font-medium text-amber-800 mt-4 bg-white p-4 rounded-xl shadow-xl mb-10">Meus Binders</h2>
+      {binderWindow && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          {/* Fundo embaçado */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            onClick={() => setBinderWindow(false)}
+          ></div>
+          {/* Pop-up de remoção */}
+          <div className="relative bg-white w-4/5 max-w-md p-4 rounded-2xl shadow-lg z-10">
+            <div className="flex justify-between items-center mb-4">
+              <p className="text-xl">Criar Binder</p>
+              <i
+                className="fa-solid fa-xmark text-2xl cursor-pointer hover:text-amber-800 transition-all"
+                onClick={() => setBinderWindow(false)}
+              ></i>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label htmlFor="input__username">Nome</label>
+              <input
+                id="input__username"
+                type="text"
+                className="border p-2 rounded"
+                value={binderName}
+                onChange={(e) => {
+                  setBinderName(e.target.value);
+                }}
+              />
+              <button
+                type="submit"
+                className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800 cursor-pointer hover:text-black hover:border-black transition-all"
+                onClick={() => handleCreateBinder(binderName)}
+              >
+                Criar Binder
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+      }
+      <div className="flex items-center mt-4 mb-10 gap-8">
+        <h2 className="text-4xl font-medium text-amber-800 bg-white p-4 rounded-xl shadow-xl">Meus Binders</h2>
+        <i
+          className="fa-solid fa-plus bg-white pr-10 pl-5 py-6 text-2xl rounded-xl hover:bg-amber-800 hover:text-white transition-all cursor-pointer"
+          onClick={() => setBinderWindow(true)}
+        ></i>
+      </div>
       <div className="flex gap-4 flex-wrap justify-center w-full">
         {/* Lista de binders */}
         {binders.length !== 0 ? binders?.map(binder => (
-          <Link
-            to={`/binders/${binder.id}`}
-            key={binder.id}
-            className="group bg-slate-50 p-5 w-full sm:w-1/2 lg:w-1/4 flex flex-col items-center gap-6 cursor-pointer hover:bg-white hover:shadow-2xl hover:-translate-y-3 transition-all duration-300 rounded-2xl border border-slate-200"
-          >
-            <h3 className="text-xl font-bold text-slate-800 group-hover:text-amber-700 transition-colors">
-              {binder.nome}
-            </h3>
-            <div className="grid grid-cols-2 gap-2 bg-slate-200 p-2 rounded-lg shadow-inner w-full">
-              {binder.cartas?.slice(0, 4).map((carta, index) => (
-                <div key={index} className="relative w-full aspect-7/10 overflow-hidden rounded-md shadow-sm bg-white">
-                  <img
-                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
-                    src={carta.image ? `${carta.image}/high.png` : placeholder}
-                    alt="Pokémon Card"
-                  />
-                </div>
-              ))}
-              {/* placeholder */}
-              {Array.from({ length: Math.max(0, 4 - (binder.cartas?.length || 0)) }).map((_, i) => (
-                <div
-                  key={`empty-${i}`}
-                  className="w-full aspect-7/10 bg-slate-300/50 border-2 border-dashed border-slate-400/30 rounded-md flex items-center justify-center"
-                >
-                </div>
-              ))}
-            </div>
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {binder.cartas?.length || 0} Cartas
-            </span>
-          </Link>
+          <BinderCard binder={binder}/>
         )) : <p>Nenhum binder criado ainda!</p>}
       </div>
-    </section>
+      {show && (
+        <div className="fixed bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in z-20">
+          Binder criado com sucesso!
+        </div>
+      )}
+    </section >
   )
 }
 
