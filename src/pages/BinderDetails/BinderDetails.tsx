@@ -13,6 +13,7 @@ const BinderDetails = () => {
     const { removeCardFromBinder, removeBinder } = useBinders();
     const [binder, setBinder] = useState<BinderWithCards>();
     const [binderDelete, setBinderDelete] = useState<boolean>(false);
+    const [previewCard, setPreviewCard] = useState<CardUser | null>(null);
     const navigate = useNavigate();
     // estado da página atual
     const [currentPage, setCurrentPage] = useState(0);
@@ -98,15 +99,44 @@ const BinderDetails = () => {
             <div className="flex items-center pb-10 gap-3">
             </div>
             <div className="group bg-slate-50 p-5 w-full sm:w-1/2 lg:w-4/10 flex flex-col items-center gap-6 rounded-2xl border border-slate-200">
+                {/* Preview da carta */}
+                {previewCard && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50">
+                        <div
+                            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                            onClick={() => setPreviewCard(null)}
+                        ></div>
+                        <div className="relative bg-white w-[90%] max-w-md lg:max-w-3xl lg:w-[80%] p-4 rounded-2xl shadow-lg z-10 flex flex-col gap-4">
+                            <div className="flex justify-between items-center">
+                                <p className="text-xl">{previewCard.name} - ({previewCard.localId} / {previewCard.set.cardCount.official})</p>
+                                <i className="fa-solid fa-xmark text-2xl cursor-pointer" onClick={() => setPreviewCard(null)}></i>
+                            </div>
+                            <div className="flex flex-col lg:flex-row gap-4">
+                                <img src={previewCard.image ? `${previewCard.image}/high.png` : placeholder} className="lg:max-w-sm" />
+                                <div className="flex flex-col gap-4 w-full">
+                                    <div className="flex items-center justify-center gap-2 shadow-xl border-gray-300 border py-4">
+                                        <p className="text-lg">{previewCard.set.name}</p>
+                                        {previewCard.set.symbol && <img className="w-1/10" src={`${previewCard.set.symbol}.png`} />}
+                                    </div>
+                                    <p className="text-lg shadow-xl border-gray-300 border py-4 hidden lg:block text-center" >Total de Cartas no Set: {previewCard.set.cardCount.total}</p>
+                                    <p className="text-lg shadow-xl border-gray-300 border py-4 text-center">Raridade: {previewCard.rarity}</p>
+                                    <p className="shadow-xl border-gray-300 border py-4 text-center text-lg">{previewCard.illustrator !== "" ? previewCard.illustrator : "Não informado"}</p>
+                                    <a className="text-center border p-3 border-amber-800 text-amber-800 rounded-2xl hover:text-black hover:border-black" href={`https://www.ligapokemon.com.br/?view=cards/card&card=${previewCard.name.replace(" ", "%20")}(${previewCard.localId}/${previewCard.set.cardCount.official})`} target="_blank">LigaPokemon</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {/* Grid de Cartas */}
                 <div className="grid grid-cols-3 gap-2 bg-slate-200 p-2 rounded-lg shadow-inner w-full">
                     {visibleCards.map((carta, index) => (
 
                         <div key={index} className="relative w-full aspect-7/10 overflow-hidden rounded-md shadow-sm bg-white">
                             <img
-                                className="w-full h-full object-cover"
+                                className="w-full h-full object-cover cursor-pointer"
                                 src={carta.image ? `${carta.image}/high.png` : placeholder}
                                 alt="Pokémon Card"
+                                onClick={() => setPreviewCard(carta)}
                             />
                             <div className="absolute top-1 right-1 z-10 bg-white/70 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">
                                 <i
@@ -115,7 +145,6 @@ const BinderDetails = () => {
                                 ></i>
                             </div>
                         </div>
-
                     ))}
 
                     {/* Espaços Vazios (Placeholders) */}
