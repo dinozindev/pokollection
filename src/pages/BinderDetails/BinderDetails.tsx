@@ -89,16 +89,16 @@ const BinderDetails = () => {
                     </div>
                 </div>
             )}
-            <div className="flex items-center justify-start gap-8 mt-4">
+            <div className="flex items-center justify-start gap-8 mt-4 mx-10 lg:p-0">
                 <Link to="/binders">
                     <i className="fa-solid fa-chevron-left bg-white pr-10 pl-6 py-6 text-2xl text-center rounded-2xl hover:bg-amber-800 hover:text-white transition-all cursor-pointer"></i>
                 </Link>
-                <h2 className="text-4xl font-medium text-amber-800 bg-white p-4 rounded-xl shadow-xl">{binder.nome}</h2>
+                <h2 className="text-4xl font-medium text-amber-800 bg-white p-4 rounded-xl shadow-xl text-center">{binder.nome}</h2>
                 <i className="fa-solid fa-trash-can bg-white pr-10 pl-5 py-6 text-2xl text-center rounded-2xl hover:bg-amber-800 hover:text-white transition-all cursor-pointer" onClick={() => setBinderDelete(true)}></i>
             </div>
             <div className="flex items-center pb-10 gap-3">
             </div>
-            <div className="group bg-slate-50 p-5 w-full sm:w-1/2 lg:w-4/10 flex flex-col items-center gap-6 rounded-2xl border border-slate-200">
+            <div className="group bg-slate-50 p-5 m-5 sm:w-1/2 lg:w-4/10 flex flex-col items-center gap-6 rounded-2xl border border-slate-200">
                 {/* Preview da carta */}
                 {previewCard && (
                     <div className="fixed inset-0 flex items-center justify-center z-50">

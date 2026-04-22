@@ -138,7 +138,7 @@ const Profile = () => {
     }, [user])
 
     return (
-        <section className="pt-30 flex flex-col items-center">
+        <section className="pt-4 flex flex-col items-center">
             <div className="relative w-60 h-60 min-w-60 min-h-60 top-55">
                 <img
                     src={userData?.avatar || profileImage}

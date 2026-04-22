@@ -11,7 +11,7 @@ const BinderCard = ({binder} : BinderCardProps) => {
         <Link
             to={`/binders/${binder.id}`}
             key={binder.id}
-            className="group bg-slate-50 p-5 w-full sm:w-1/2 lg:w-1/4 flex flex-col items-center gap-6 cursor-pointer hover:bg-white hover:shadow-2xl hover:-translate-y-3 transition-all duration-300 rounded-2xl border border-slate-200"
+            className="group bg-slate-50 p-5 m-5 w-full sm:w-1/2 lg:w-1/4 flex flex-col items-center gap-6 cursor-pointer hover:bg-white hover:shadow-2xl hover:-translate-y-3 transition-all duration-300 rounded-2xl border border-slate-200"
         >
             <h3 className="text-xl font-bold text-slate-800 group-hover:text-amber-700 transition-colors">
                 {binder.nome}
