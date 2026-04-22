@@ -121,7 +121,7 @@ const BinderDetails = () => {
                                     <p className="text-lg shadow-xl border-gray-300 border py-4 hidden lg:block text-center" >Total de Cartas no Set: {previewCard.set.cardCount.total}</p>
                                     <p className="text-lg shadow-xl border-gray-300 border py-4 text-center">Raridade: {previewCard.rarity}</p>
                                     <p className="shadow-xl border-gray-300 border py-4 text-center text-lg">{previewCard.illustrator !== "" ? previewCard.illustrator : "Não informado"}</p>
-                                    <a className="text-center border p-3 border-amber-800 text-amber-800 rounded-2xl hover:text-black hover:border-black" href={`https://www.ligapokemon.com.br/?view=cards/card&card=${previewCard.name.replace(" ", "%20")}(${previewCard.localId}/${previewCard.set.cardCount.official})`} target="_blank">LigaPokemon</a>
+                                    <a className="text-center border p-3 border-amber-800 text-amber-800 rounded-2xl hover:text-black hover:border-black" href={`https://www.ligapokemon.com.br/?view=cards/card&card=${previewCard.name.replace(" ", "%20")}(${previewCard.localId}/${previewCard.set.cardCount.official.toString().length < previewCard.localId.length ? `0${previewCard.set.cardCount.official}` : previewCard.set.cardCount.official})`} target="_blank">LigaPokemon</a>
                                 </div>
                             </div>
                         </div>

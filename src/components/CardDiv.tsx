@@ -75,7 +75,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                             onClick={() => addCard(card)}
                                         ></i>
                                     </div>}
-                                <a className="text-center border p-3 border-amber-800 text-amber-800 rounded-2xl hover:text-black hover:border-black" href={`https://www.ligapokemon.com.br/?view=cards/card&card=${card.name.replace(" ", "%20")}(${card.localId}/${card.set.cardCount.official})`} target="_blank">LigaPokemon</a>
+                                <a className="text-center border p-3 border-amber-800 text-amber-800 rounded-2xl hover:text-black hover:border-black" href={`https://www.ligapokemon.com.br/?view=cards/card&card=${card.name.replace(" ", "%20")}(${card.localId}/${card.set.cardCount.official.toString().length < card.localId.length ? `0${card.set.cardCount.official}` : card.set.cardCount.official})`} target="_blank">LigaPokemon</a>
                             </div>
                         </div>
                     </div>
