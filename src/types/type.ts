@@ -1,3 +1,4 @@
+import type { FieldValue, Timestamp } from "firebase/firestore";
 
 export type User = {
     email: string;
@@ -37,6 +38,7 @@ export type CardUser = {
     quantity: number;
     set: Set;
     rarity: string;
+    createdAt?: Timestamp | FieldValue;
 }
 
 export type ProfileInfo = {

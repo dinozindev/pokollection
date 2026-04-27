@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import type { CardUser } from "../../types/type";
 import { useCards } from "../../hooks/useCards";
@@ -33,10 +33,17 @@ const Collection = () => {
         const cardsRef = collection(db, "users", user.uid, "cards");
 
         const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
-            const cards: CardUser[] = snapshot.docs.map((doc) => ({
+            const cards: CardUser[] = snapshot.docs.map(
+                (doc) => ({
                 ...(doc.data() as CardUser),
                 id: doc.id
-            }));
+            }))
+            .sort((a, b) => {
+                const aTime = a.createdAt instanceof Timestamp ? a.createdAt?.toMillis() : 0;
+                const bTime = b.createdAt instanceof Timestamp ? b.createdAt?.toMillis() : 0;
+                return bTime - aTime;
+            });
+
             setUserCards(cards);
         });
 

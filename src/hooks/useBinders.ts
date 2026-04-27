@@ -74,7 +74,7 @@ export const useBinders = () => {
 
         const docRef = await addDoc(bindersRef, {
             nome,
-            criadoEm: serverTimestamp()
+            createdAt: serverTimestamp()
         });
 
         return docRef;
@@ -107,7 +107,8 @@ export const useBinders = () => {
                 illustrator: card.illustrator ?? "",
                 localId: card.localId,
                 set: card.set,
-                rarity: card.rarity
+                rarity: card.rarity,
+                createdAt: serverTimestamp()
             },
             { merge: true }
         );

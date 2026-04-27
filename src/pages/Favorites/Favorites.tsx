@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../context/AuthContext"
 import type { CardUser } from "../../types/type";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { useFavorites } from "../../hooks/useFavorites";
 import CardDiv from "../../components/CardDiv";
@@ -30,26 +30,32 @@ const Favorites = () => {
     const favRef = collection(db, "users", user.uid, "favorites");
 
     const unsubscribe = onSnapshot(favRef, (snapshot) => {
-      const cards: CardUser[] = [];
-      const favMap: Record<string, boolean> = {};
+        const cards: CardUser[] = [];
+        const favMap: Record<string, boolean> = {};
 
-      snapshot.forEach((doc) => {
-        const data = doc.data() as CardUser;
+        snapshot.forEach((doc) => {
+            const data = doc.data() as CardUser;
 
-        cards.push({
-          ...data,
-          id: doc.id
+            cards.push({
+                ...data,
+                id: doc.id
+            });
+
+            favMap[doc.id] = true;
         });
 
-        favMap[doc.id] = true;
-      });
+        cards.sort((a, b) => {
+            const aTime = a.createdAt instanceof Timestamp ? a.createdAt.toMillis() : 0;
+            const bTime = b.createdAt instanceof Timestamp ? b.createdAt.toMillis() : 0;
+            return bTime - aTime;
+        });
 
-      setUserFavoriteCards(cards);
-      setFavorites(favMap);
+        setUserFavoriteCards(cards);
+        setFavorites(favMap);
     });
 
     return () => unsubscribe();
-  }, [user]);
+}, [user]);
 
   return (
     <section className="flex items-center py-30 flex-col min-h-screen">

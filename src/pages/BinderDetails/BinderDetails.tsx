@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useBinders } from "../../hooks/useBinders";
 import { AuthContext } from "../../context/AuthContext";
 import type { Binder, BinderWithCards, CardUser } from "../../types/type";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot, Timestamp } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import placeholder from "../../assets/card-placeholder.png";
 
@@ -48,7 +48,14 @@ const BinderDetails = () => {
             const binderData = binderSnap.data() as Omit<Binder, 'id'>;
 
             const unsubscribeCartas = onSnapshot(cartasRef, (cartasSnap) => {
-                const cartas = cartasSnap.docs.map(doc => doc.data() as CardUser);
+                const cartas = cartasSnap.docs.map(
+                    doc => doc.data() as CardUser)
+                    .sort((a, b) => {
+                        const aTime = a.createdAt instanceof Timestamp ? a.createdAt?.toMillis() : 0;
+                        const bTime = b.createdAt instanceof Timestamp ? b.createdAt?.toMillis() : 0;
+                        return bTime - aTime;
+                    });
+                ;
 
                 setBinder({
                     id: binderSnap.id,

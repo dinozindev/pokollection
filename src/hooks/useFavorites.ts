@@ -1,7 +1,7 @@
 import type { Card } from "@tcgdex/sdk";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
-import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import type { CardUser } from "../types/type";
 
@@ -29,6 +29,7 @@ export const useFavorites = () => {
                 illustrator: card.illustrator ?? "",
                 localId: card.localId,
                 set: card.set,
+                createdAt: serverTimestamp(),
                 rarity: card.rarity
             },
             { merge: true }

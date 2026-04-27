@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import type { CardUser } from "../types/type";
-import { collection, deleteDoc, doc, getDoc, getDocs, increment, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, increment, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
 export const useCards = () => {
@@ -22,6 +22,7 @@ export const useCards = () => {
                 localId: card.localId,
                 set: card.set,
                 quantity: increment(1),
+                createdAt: serverTimestamp(),
                 rarity: card.rarity
             },
             { merge: true }

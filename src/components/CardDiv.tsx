@@ -47,7 +47,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                 <p className="text-xl">{card.name} - ({card.localId} / {card.set.cardCount.official})</p>
                             </div>
                             <i
-                                className="fa-solid fa-xmark text-2xl cursor-pointer"
+                                className="fa-solid fa-xmark text-2xl cursor-pointer hover:text-amber-800 transition-all"
                                 onClick={() => setCardPreview(false)}
                             ></i>
                         </div>
