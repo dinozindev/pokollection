@@ -145,7 +145,7 @@ const Cards = () => {
         requireAuth(() => removeCard(card));
     }
 
-    const handleToggleFavorite = (card: Card) => {
+    const handleToggleFavorite = (card: CardUser) => {
         requireAuth(() => toggleFavorite(card))
     }
 

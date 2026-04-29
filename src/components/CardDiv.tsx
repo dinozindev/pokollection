@@ -5,20 +5,18 @@ import type { CardUser } from "../types/type";
 
 type CardProps = {
     loadedImages: Record<string, boolean>;
-    card: any;
+    card: CardUser | any;
     handleImageLoad: (id: string) => void;
     favorites?: Record<string, boolean>;
-    toggleFavorite?: any;
-    removeCard?: any;
+    toggleFavorite?: (card: CardUser) => void;
+    removeCard?: (card: CardUser) => void;
     addCard?: (card: CardUser) => void;
     userCards?: any;
-    addToBinder?: any;
-    removeFromBinder?: any;
-    binderId?: string;
+    addToBinder?: boolean;
     onBinderSuccess?: (message: string) => void;
 }
 
-const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToBinder, onBinderSuccess, removeFromBinder, binderId }: CardProps) => {
+const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToBinder, onBinderSuccess}: CardProps) => {
 
     const [cardPreview, setCardPreview] = useState<boolean>();
     const [binderMenu, setBinderMenu] = useState<boolean>(false);
@@ -42,7 +40,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                         ? "fa-solid fa-star text-yellow-400"
                                         : "fa-regular fa-star text-gray-400"
                                         }`}
-                                    onClick={() => toggleFavorite(card)}
+                                    onClick={() => toggleFavorite?.(card)}
                                 ></i>}
                                 <p className="text-xl">{card.name} - ({card.localId} / {card.set.cardCount.official})</p>
                             </div>
@@ -65,7 +63,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                     <div className="flex items-center justify-evenly px-2">
                                         <i
                                             className="fa-solid fa-minus text-red-500 cursor-pointer"
-                                            onClick={() => removeCard(card)}
+                                            onClick={() => removeCard?.(card)}
                                         ></i>
                                         <p className="w-1/2 text-center">
                                             {card.quantity ?? userCards?.[card.id] ?? 0}
@@ -81,10 +79,6 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                     </div>
                 </div>
             )}
-            {removeFromBinder &&
-                <div className="flex justify-end mb-1">
-                    <i className="fa-solid fa-xmark text-amber-800 hover:text-black transition-all cursor-pointer" onClick={() => removeFromBinder(binderId, card)}></i>
-                </div>}
             <div className="relative">
                 {!loadedImages[card.id] && (
                     <div className="absolute inset-0 rounded-md overflow-hidden bg-gray-300">
@@ -98,10 +92,6 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                     className={`w-full transition-opacity duration-300 ${loadedImages[card.id] ? "opacity-100" : "opacity-0"}`}
                 />
             </div>
-            {/* <div className="flex items-center justify-between">
-                <h3>{card.name}</h3>
-                <i className="fa-solid fa-circle-info text-amber-800 hover:text-black hover:cursor-pointer transition-all" onClick={() => setCardPreview(true)}></i>
-            </div> */}
             <div className="flex items-center justify-between">
                 <h3>{card.name}</h3>
                 <div className="flex items-center gap-2">
@@ -131,14 +121,14 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                         ? "fa-solid fa-star text-yellow-400"
                         : "fa-regular fa-star text-gray-400"
                         }`}
-                    onClick={() => toggleFavorite(card)}
+                    onClick={() => toggleFavorite?.(card)}
                 ></i>}
             </div>
             {addCard &&
                 <div className="flex items-center justify-between px-2">
                     <i
                         className="fa-solid fa-minus text-red-500 cursor-pointer"
-                        onClick={() => removeCard(card)}
+                        onClick={() => removeCard?.(card)}
                     ></i>
                     <p className="w-1/2 text-center">
                         {card.quantity ?? userCards?.[card.id] ?? 0}

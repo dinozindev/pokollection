@@ -62,7 +62,7 @@ const Favorites = () => {
       <h2 className="text-4xl font-medium text-amber-800 mt-4 bg-white p-4 rounded-xl shadow-xl">Meus Favoritos</h2>
       <div className="flex items-center pb-10 gap-3">
       </div>
-      <div className={`flex flex-wrap justify-center gap-6 ${userFavoriteCards.length === 1 ? "w-full" : ""}`}>
+      <div className={`flex flex-wrap justify-center gap-6 ${userFavoriteCards.length <= 2 ? "w-full" : ""}`}>
         {userFavoriteCards.length !== 0 ? userFavoriteCards.map(card => (
           <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={toggleFavoriteUser} />
         )) : <p>Nenhuma carta em seus favoritos ainda!</p>}

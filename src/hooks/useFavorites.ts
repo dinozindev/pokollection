@@ -1,4 +1,3 @@
-import type { Card } from "@tcgdex/sdk";
 import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 import { deleteDoc, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -8,7 +7,7 @@ import type { CardUser } from "../types/type";
 export const useFavorites = () => {
     const { user } = useContext(AuthContext);
 
-    const toggleFavorite = async (card: Card) => {
+    const toggleFavorite = async (card: CardUser) => {
         if (!user) return;
 
         const cardRef = doc(db, "users", user.uid, "favorites", card.id);
