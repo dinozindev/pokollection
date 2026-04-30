@@ -27,6 +27,14 @@ export const useCards = () => {
             },
             { merge: true }
         );
+
+        // se a carta existe na wishlist, remover ela quando adicionada a coleção
+        const wishlistRef = doc(db, "users", user.uid, "wishlist", card.id);
+        const wishlistSnap = await getDoc(wishlistRef);
+
+        if (wishlistSnap.exists()) {
+            await removeCard(card);
+        } 
     };
 
     const removeCard = async (card: CardUser) => {

@@ -8,7 +8,9 @@ type CardProps = {
     card: CardUser | any;
     handleImageLoad: (id: string) => void;
     favorites?: Record<string, boolean>;
+    wishlist?: Record<string, boolean>;
     toggleFavorite?: (card: CardUser) => void;
+    toggleWishlist?: (card: CardUser) => void;
     removeCard?: (card: CardUser) => void;
     addCard?: (card: CardUser) => void;
     userCards?: any;
@@ -16,7 +18,7 @@ type CardProps = {
     onBinderSuccess?: (message: string) => void;
 }
 
-const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorite, removeCard, addCard, userCards, addToBinder, onBinderSuccess}: CardProps) => {
+const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, toggleFavorite, toggleWishlist, removeCard, addCard, userCards, addToBinder, onBinderSuccess }: CardProps) => {
 
     const [cardPreview, setCardPreview] = useState<boolean>();
     const [binderMenu, setBinderMenu] = useState<boolean>(false);
@@ -88,7 +90,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                 <img
                     src={card.image ? `${card.image}/high.png` : placeholder}
                     onLoad={() => handleImageLoad(card.id)}
-                    onError={() => handleImageLoad(card.id)} 
+                    onError={() => handleImageLoad(card.id)}
                     className={`w-full transition-opacity duration-300 ${loadedImages[card.id] ? "opacity-100" : "opacity-0"}`}
                 />
             </div>
@@ -108,6 +110,17 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, toggleFavorit
                                     onSuccess={onBinderSuccess}
                                 />
                             )}
+                        </div>
+                    )}
+                    {toggleWishlist && (
+                        <div className="relative">
+                            <i
+                                className={`cursor-pointer transition-all ${wishlist?.[card.id]
+                                    ? "fa-solid fa-circle-check text-green-400"
+                                    : "fa-solid fa-clipboard-list text-amber-800"
+                                    }`}
+                                onClick={() => toggleWishlist?.(card)}
+                            ></i>
                         </div>
                     )}
                     <i className="fa-solid fa-circle-info text-amber-800 hover:text-black hover:cursor-pointer transition-all" onClick={() => setCardPreview(true)}></i>

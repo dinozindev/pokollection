@@ -10,12 +10,14 @@ import CardDiv from "../../components/CardDiv";
 import { useCards } from "../../hooks/useCards";
 import { useFavorites } from "../../hooks/useFavorites";
 import type { CardUser } from "../../types/type";
+import { useWishlist } from "../../hooks/useWishlist";
 
 const Cards = () => {
 
     const { user } = useContext(AuthContext);
     const { addCard, removeCard } = useCards();
     const { toggleFavorite } = useFavorites();
+    const { toggleWishlist } = useWishlist();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -25,6 +27,7 @@ const Cards = () => {
     const [query, setQuery] = useState<string>('');
     const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
     const [favorites, setFavorites] = useState<Record<string, boolean>>({});
+    const [wishlistedCards, setWishlistedCards] = useState<Record<string, boolean>>({});
     const [showLoginWindow, setShowLoginWindow] = useState<boolean>(false);
     const [showErrorWindow, setErrorWindow] = useState<boolean>(false);
     const [loginMessage, setLoginMessage] = useState<string>("");
@@ -149,6 +152,10 @@ const Cards = () => {
         requireAuth(() => toggleFavorite(card))
     }
 
+    const handleToggleWishlist = (card: CardUser) => {
+        requireAuth(() => toggleWishlist(card));
+    }
+
     const handleBinderSuccess = (message: string) => {
         setBinderMessage(message);
         setShowBinderWindow(true);
@@ -204,6 +211,25 @@ const Cards = () => {
             });
 
             setFavorites(favMap);
+        });
+
+        return () => unsubscribe();
+    }, [user]);
+
+    useEffect(() => {
+        if (!user) return;
+        const cardsRef = collection(db, "users", user.uid, "wishlist");
+
+        const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
+            
+            const wishlistMap: Record<string, boolean> = {};
+
+            snapshot.forEach((doc) => {
+                wishlistMap[doc.id] = true;
+            });
+            
+
+            setWishlistedCards(wishlistMap);
         });
 
         return () => unsubscribe();
@@ -280,7 +306,7 @@ const Cards = () => {
             <div className="flex flex-wrap justify-center gap-6">
                 {cards.length !== 0 ? cards.map(card => (
                     // Componente de card
-                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={handleToggleFavorite} removeCard={handleRemoveCard} addCard={handleAddCard} userCards={userCards} addToBinder={!!user} onBinderSuccess={handleBinderSuccess}/>
+                    <CardDiv key={card.id} loadedImages={loadedImages} card={card} handleImageLoad={handleImageLoad} favorites={favorites} toggleFavorite={handleToggleFavorite} removeCard={handleRemoveCard} addCard={handleAddCard} userCards={userCards} addToBinder={!!user} wishlist={wishlistedCards} toggleWishlist={handleToggleWishlist} onBinderSuccess={handleBinderSuccess} />
                 )) : <p className="p-2 text-center">Nenhuma carta encontrada. <br></br>
                     Pesquise para encontrar a carta que deseja!</p>}
             </div>
