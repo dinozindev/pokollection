@@ -17,7 +17,7 @@ export const useWishlist = () => {
         const colecaoRef = doc(db, "users", user.uid, "cards", card.id);
         const colecaoSnapshot = await getDoc(colecaoRef);
 
-        if(colecaoSnapshot.exists()) return;
+        if(colecaoSnapshot.exists()) return "Card já está presente em sua coleção!";
 
         const cardRef = doc(db, "users", user.uid, "wishlist", card.id);
 
@@ -46,5 +46,14 @@ export const useWishlist = () => {
         
     };
 
-    return { toggleWishlist }
+    const removeFromWishlist = async (card: CardUser) => {
+
+        if (!user) return;
+
+        const cardRef = doc(db, "users", user.uid, "wishlist", card.id);
+
+        await deleteDoc(cardRef);
+    }
+
+    return { toggleWishlist, removeFromWishlist }
 }

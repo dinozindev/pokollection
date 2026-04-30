@@ -44,6 +44,15 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
                                         }`}
                                     onClick={() => toggleFavorite?.(card)}
                                 ></i>}
+                                {toggleWishlist && (
+                                        <i
+                                            className={`cursor-pointer transition-all ${wishlist?.[card.id]
+                                                ? "fa-solid fa-circle-check text-green-400"
+                                                : "fa-solid fa-clipboard-list text-amber-800 "
+                                                }`}
+                                            onClick={() => toggleWishlist?.(card)}
+                                        ></i>
+                                )}
                                 <p className="text-xl">{card.name} - ({card.localId} / {card.set.cardCount.official})</p>
                             </div>
                             <i
@@ -116,8 +125,8 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
                         <div className="relative">
                             <i
                                 className={`cursor-pointer transition-all ${wishlist?.[card.id]
-                                    ? "fa-solid fa-circle-check text-green-400"
-                                    : "fa-solid fa-clipboard-list text-amber-800"
+                                    ? "fa-solid fa-circle-check text-green-400 hover:text-green-800"
+                                    : "fa-solid fa-clipboard-list text-amber-800 hover:text-black"
                                     }`}
                                 onClick={() => toggleWishlist?.(card)}
                             ></i>

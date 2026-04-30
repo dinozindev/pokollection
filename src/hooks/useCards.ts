@@ -3,9 +3,12 @@ import { AuthContext } from "../context/AuthContext";
 import type { CardUser } from "../types/type";
 import { collection, deleteDoc, doc, getDoc, getDocs, increment, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
+import { useWishlist } from "./useWishlist";
 
 export const useCards = () => {
     const { user } = useContext(AuthContext);
+
+    const {removeFromWishlist} = useWishlist();
 
     const addCard = async (card: CardUser) => {
         if (!user) return;
@@ -33,7 +36,7 @@ export const useCards = () => {
         const wishlistSnap = await getDoc(wishlistRef);
 
         if (wishlistSnap.exists()) {
-            await removeCard(card);
+            await removeFromWishlist(card);
         } 
     };
 
