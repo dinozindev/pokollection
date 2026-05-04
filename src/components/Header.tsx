@@ -34,6 +34,7 @@ const Header = () => {
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/cards">Cards</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/profile">Perfil</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/collection">Coleção</Link>
+                <Link className="cursor-pointer hover:text-amber-800 transition-all" to="wishlist">Wishlist</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/favorites">Favoritos</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/binders">Binders</Link>
                 {user ? <div className="border-solid rounded-md border px-3 py-2 text-amber-800 hover:text-black cursor-pointer transition-all" onClick={() => doSignOut()}>
@@ -54,6 +55,7 @@ const Header = () => {
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/cards">Cards</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/profile">Perfil</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/collection">Coleção</Link>
+                <Link className="cursor-pointer hover:text-amber-800 transition-all" to="wishlist">Wishlist</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/favorites">Favoritos</Link>
                 <Link className="cursor-pointer hover:text-amber-800 transition-all" to="/binders">Binders</Link>
                 {user ? <div className="border-solid rounded-md border px-5 py-3 text-amber-800 hover:text-black cursor-pointer transition-all" onClick={() => doSignOut()}>

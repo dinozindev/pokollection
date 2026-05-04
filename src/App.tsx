@@ -13,6 +13,7 @@ import Binders from "./pages/Binders/Binders"
 import BinderDetails from "./pages/BinderDetails/BinderDetails"
 import { useEffect } from "react"
 import { limparCacheExpirado, limparCacheMaisAntigo } from "./utils/storage"
+import WishList from "./pages/WishList/WishList"
 
 const App = () => {
 
@@ -46,6 +47,7 @@ useEffect(() => {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
+          <Route path="/wishlist" element={<ProtectedRoute><WishList/></ProtectedRoute>} />
           <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
           <Route path="/binders" element={<ProtectedRoute><Binders /></ProtectedRoute>} />
           <Route path="/binders/:id" element={<ProtectedRoute><BinderDetails /></ProtectedRoute>} />
