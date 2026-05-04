@@ -11,13 +11,13 @@ import { db } from "../firebase/firebase";
 export const useWishlist = () => {
     const { user } = useContext(AuthContext);
 
-    const toggleWishlist = async (card: CardUser) => {
+    const toggleWishlist = async (card: CardUser) : Promise<{type: 'error' | 'success' | 'removed', message: string} | undefined>  => {
         if (!user) return;
 
         const colecaoRef = doc(db, "users", user.uid, "cards", card.id);
         const colecaoSnapshot = await getDoc(colecaoRef);
 
-        if(colecaoSnapshot.exists()) return "Card já está presente em sua coleção!";
+        if(colecaoSnapshot.exists()) return { type: 'error', message: `${card.name} já está presente em sua coleção!` };
 
         const cardRef = doc(db, "users", user.uid, "wishlist", card.id);
 
@@ -25,7 +25,7 @@ export const useWishlist = () => {
 
         if (snapshot.exists()) {
             await deleteDoc(cardRef);
-            return;
+            return { type: 'removed', message: `${card.name} removido da Wishlist!` };
         }
 
         await setDoc(
@@ -43,9 +43,10 @@ export const useWishlist = () => {
             { merge: true }
         );
 
-        
+        return { type: 'success', message: `${card.name} adicionado à Wishlist!` };
     };
 
+    // utilizado pela função do hook useCards para remover caso a carta seja adicionada a coleção
     const removeFromWishlist = async (card: CardUser) => {
 
         if (!user) return;

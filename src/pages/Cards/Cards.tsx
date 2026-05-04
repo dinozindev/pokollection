@@ -40,6 +40,8 @@ const Cards = () => {
     const [showBinderWindow, setShowBinderWindow] = useState<boolean>(false);
     const [binderMessage, setBinderMessage] = useState<string>("");
 
+    const [wishlistMessage, setWishlistMessage] = useState<{ type: string, message: string } | null>(null);
+
     // filtro de raridade (TODO)
     // const [rarity, setRarity] = useState<string>('');
     // const rarities = ["Rare Holo", "Common", "Rare", "Uncommon", "Holo Rare", "Special illustration rare"]
@@ -153,8 +155,15 @@ const Cards = () => {
     }
 
     const handleToggleWishlist = (card: CardUser) => {
-        requireAuth(() => toggleWishlist(card));
-    }
+        requireAuth(async () => {
+            const result = await toggleWishlist(card);
+
+            if (!result) return;
+
+            setWishlistMessage(result);
+            setTimeout(() => setWishlistMessage(null), 3000);
+        });
+    };
 
     const handleBinderSuccess = (message: string) => {
         setBinderMessage(message);
@@ -221,13 +230,13 @@ const Cards = () => {
         const cardsRef = collection(db, "users", user.uid, "wishlist");
 
         const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
-            
+
             const wishlistMap: Record<string, boolean> = {};
 
             snapshot.forEach((doc) => {
                 wishlistMap[doc.id] = true;
             });
-            
+
 
             setWishlistedCards(wishlistMap);
         });
@@ -323,6 +332,12 @@ const Cards = () => {
             {showBinderWindow && (
                 <div className="fixed bg-white text-black px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl">
                     {binderMessage}
+                </div>
+            )}
+            {wishlistMessage && (
+                <div className={`fixed px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl text-white  ${wishlistMessage.type === 'error' ? 'bg-red-500' : 'bg-green-500'
+                    }`}>
+                    {wishlistMessage.message}
                 </div>
             )}
         </section>
