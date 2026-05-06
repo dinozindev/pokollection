@@ -58,6 +58,7 @@ const Register = () => {
                     type="text"
                     value={user.username}
                     onChange={(e) => setUser({ ...user, username: e.target.value })}
+                    pattern="^[a-zA-Z0-9]{6,}$"
                 />
                 <label htmlFor="input__email">Email</label>
                 <input
@@ -66,6 +67,7 @@ const Register = () => {
                     type="text"
                     value={user.email}
                     onChange={(e) => setUser({ ...user, email: e.target.value })}
+                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                 />
                 <label htmlFor="input__senha">Senha</label>
                 <input
@@ -74,6 +76,7 @@ const Register = () => {
                     type="password"
                     value={user.password}
                     onChange={(e) => setUser({ ...user, password: e.target.value })}
+                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" 
                 />
                 {error && (
                     <span className="text-red-500 text-center">E-mail informado já está sendo utilizado.</span>
