@@ -76,7 +76,7 @@ const Register = () => {
                     onChange={(e) => setUser({ ...user, password: e.target.value })}
                 />
                 {error && (
-                    <span className="text-red-500">E-mail informado já está sendo utilizado.</span>
+                    <span className="text-red-500 text-center">E-mail informado já está sendo utilizado.</span>
                 )}
                 <div className="flex justify-center">
                     <button

@@ -41,7 +41,7 @@ const Login = () => {
         <label htmlFor="input__senha">Senha</label>
         <input id="input__senha" className="border rounded-xl px-2 py-1" type="password" value={user.password} onChange={(e) => setUser({ ...user, password: e.target.value })} />
         {error && (
-          <span className="text-red-500">E-mail ou senha incorreto(s).</span>
+          <span className="text-red-500 text-center">E-mail ou senha incorreto(s).</span>
         )}
         <div className="flex justify-center">
           <button
