@@ -54,13 +54,20 @@ const Binders = () => {
                 onClick={() => setBinderWindow(false)}
               ></i>
             </div>
-            <div className="flex flex-col gap-2">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleCreateBinder(binderName);
+              }}
+              className="flex flex-col gap-2">
               <label htmlFor="input__username">Nome</label>
               <input
                 id="input__username"
                 type="text"
                 className="border p-2 rounded"
                 value={binderName}
+                required
+                pattern="\S+.*"
                 onChange={(e) => {
                   setBinderName(e.target.value);
                 }}
@@ -68,11 +75,10 @@ const Binders = () => {
               <button
                 type="submit"
                 className="bg-transparent p-2 mt-4 rounded-2xl border-amber-800 border-2 text-amber-800 cursor-pointer hover:text-black hover:border-black transition-all"
-                onClick={() => handleCreateBinder(binderName)}
               >
                 Criar Binder
               </button>
-            </div>
+            </form>
           </div>
         </div>
       )
@@ -87,7 +93,7 @@ const Binders = () => {
       <div className="flex gap-4 flex-wrap justify-center w-full">
         {/* Lista de binders */}
         {binders.length !== 0 ? binders?.map(binder => (
-          <BinderCard binder={binder}/>
+          <BinderCard binder={binder} />
         )) : <p>Nenhum binder criado ainda!</p>}
       </div>
       {show && (

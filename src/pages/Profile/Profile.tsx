@@ -172,6 +172,8 @@ const Profile = () => {
                                 onChange={(e) =>
                                     setUserForm({ ...userForm, username: e.target.value })
                                 }
+                                required
+                                pattern="\S+.*"
                             />
                             <label htmlFor="input__favoritepkmn">Pokémon favorito</label>
                             <input

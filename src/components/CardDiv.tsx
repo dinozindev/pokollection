@@ -38,7 +38,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-1">
                                 {favorites && <i
-                                    className={`cursor-pointer transition-all ${favorites[card.id]
+                                    className={`cursor-pointer transition-all hover:text-yellow-300 ${favorites[card.id]
                                         ? "fa-solid fa-star text-yellow-400"
                                         : "fa-regular fa-star text-gray-400"
                                         }`}
@@ -47,8 +47,8 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
                                 {toggleWishlist && (
                                         <i
                                             className={`cursor-pointer transition-all ${wishlist?.[card.id]
-                                                ? "fa-solid fa-circle-check text-green-400"
-                                                : "fa-solid fa-clipboard-list text-amber-800 "
+                                                ? "fa-solid fa-circle-check text-green-400 hover:text-green-800"
+                                                : "fa-solid fa-clipboard-list text-amber-800 hover:text-black"
                                                 }`}
                                             onClick={() => toggleWishlist?.(card)}
                                         ></i>
@@ -73,14 +73,14 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
                                 {addCard &&
                                     <div className="flex items-center justify-evenly px-2">
                                         <i
-                                            className="fa-solid fa-minus text-red-500 cursor-pointer"
+                                            className="fa-solid fa-minus text-red-500 cursor-pointer hover:text-red-300"
                                             onClick={() => removeCard?.(card)}
                                         ></i>
                                         <p className="w-1/2 text-center">
                                             {card.quantity ?? userCards?.[card.id] ?? 0}
                                         </p>
                                         <i
-                                            className="fa-solid fa-plus text-green-500 cursor-pointer"
+                                            className="fa-solid fa-plus text-green-500 cursor-pointer hover:text-green-300"
                                             onClick={() => addCard(card)}
                                         ></i>
                                     </div>}
@@ -149,14 +149,14 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
             {addCard &&
                 <div className="flex items-center justify-between px-2">
                     <i
-                        className="fa-solid fa-minus text-red-500 cursor-pointer"
+                        className="fa-solid fa-minus text-red-500 cursor-pointer hover:text-red-300"
                         onClick={() => removeCard?.(card)}
                     ></i>
                     <p className="w-1/2 text-center">
                         {card.quantity ?? userCards?.[card.id] ?? 0}
                     </p>
                     <i
-                        className="fa-solid fa-plus text-green-500 cursor-pointer"
+                        className="fa-solid fa-plus text-green-500 cursor-pointer hover:text-green-300"
                         onClick={() => addCard(card)}
                     ></i>
                 </div>}
