@@ -4,17 +4,19 @@ import { tcgdex } from "../../api/api";
 import { Query, type Card } from "@tcgdex/sdk";
 import { Link } from "react-router-dom";
 import HomeCard from "../../components/HomeCard";
+import { motion } from "framer-motion";
 
 const Home = () => {
 
   const [cards, setCards] = useState<Card[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // busca as cartas com base no nome incluido na barra de pesquisa
   const fetchCardsBySet = async () => {
     try {
       const cardsResume = await tcgdex.card.list(
         Query.create()
-          .contains('set.name', "Ascended Heroes")
+          .contains('set.name', "Perfect Order")
       )
       const cardsList: any = await Promise.all(
         cardsResume.map(card => tcgdex.card.get(card.id))
@@ -23,6 +25,8 @@ const Home = () => {
       console.log(cardsList);
     } catch (error) {
       console.log(error)
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -40,9 +44,19 @@ const Home = () => {
           </div>
           <p className="md:w-1/2 w-full text-xl">No <span className="text-amber-800">Pokollection</span>, você cataloga sua coleção real, organiza suas cartas em pastas e destaca suas cartas favoritas. Cadastre-se agora e transforme sua paixão por Pokémon em uma <span className="text-amber-800">galeria organizada e profissional</span>.</p>
         </div>
-        <div className="pb-40">
-          <CarrosselCards cartas={cards} />
-        </div>
+        {loading ? (
+          <div className="w-full flex justify-center items-center pb-40">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1 }}
+              className="w-10 h-10 border-4 border-amber-800 border-t-transparent rounded-full"
+            />
+          </div>
+        ) : (
+          <div className="pb-40">
+            <CarrosselCards cartas={cards} />
+          </div>
+        )}
         <div className="flex flex-col md:flex-row py-20 px-10 lg:px-30 gap-6 w-full">
           <HomeCard title="Adicione cartas a sua coleção!" description="Adicione suas cartas físicas e digitais em segundos. Seu catálogo pessoal, disponível onde quer que você esteja.">
             <i className="fa-solid fa-layer-group text-6xl lg:text-8xl text-amber-800"></i>
