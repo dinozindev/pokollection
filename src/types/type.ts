@@ -6,6 +6,26 @@ export type User = {
     username: string;
 }
 
+export type CompleteUser = {
+    id: string;
+    avatar: string;
+    bio: string;
+    createdAt?: Timestamp | FieldValue;
+    favoriteGen: string;
+    favoritePokemon: string;
+    favoriteType: string;
+    username: string;
+    followers: Follower[];
+    following: Follower[];
+}
+
+type Follower = {
+    uid: string;
+    username: string;
+    avatar: string;
+    followedAt: Timestamp | FieldValue;
+}
+
 type CardCount = {
     official: number;
     total: number;

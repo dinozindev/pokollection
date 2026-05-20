@@ -93,7 +93,7 @@ const Binders = () => {
       <div className="flex gap-4 flex-wrap justify-center w-full">
         {/* Lista de binders */}
         {binders.length !== 0 ? binders?.map(binder => (
-          <BinderCard binder={binder} />
+          <BinderCard binder={binder} key={binder.id} />
         )) : <p>Nenhum binder criado ainda!</p>}
       </div>
       {show && (

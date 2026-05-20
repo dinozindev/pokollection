@@ -307,15 +307,15 @@ const Profile = () => {
                         </div>
                     </ProfileCard>
                 </div>
-                <div className="flex gap-2 mt-4 mx-4 w-full items-center lg:w-2/5">
-                    <Link to="/favorites" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 ml-4 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                <div className="flex flex-wrap md:flex-nowrap gap-2 mt-4 mx-4 w-full items-center justify-center lg:w-2/5">
+                    <Link to="/favorites" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Favoritos</p>
                         <i className="fa-solid fa-star text-amber-300"></i>
                     </Link>
                     <Link to="/collection" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Coleção</p>
                         <i className="fa-solid fa-layer-group text-amber-800"></i></Link>
-                    <Link to="/binders" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 mr-4 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                    <Link to="/binders" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Binders</p>
                         <i className="fa-solid fa-folder text-amber-800"></i></Link>
                 </div>
@@ -325,7 +325,7 @@ const Profile = () => {
                     Perfil salvo com sucesso!
                 </div>
             )}
-        </section >
+        </section>
     )
 }
 
