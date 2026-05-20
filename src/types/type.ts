@@ -15,15 +15,6 @@ export type CompleteUser = {
     favoritePokemon: string;
     favoriteType: string;
     username: string;
-    followers: Follower[];
-    following: Follower[];
-}
-
-type Follower = {
-    uid: string;
-    username: string;
-    avatar: string;
-    followedAt: Timestamp | FieldValue;
 }
 
 type CardCount = {

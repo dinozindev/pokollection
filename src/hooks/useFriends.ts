@@ -16,21 +16,14 @@ export const useFriends = () => {
             await deleteDoc(followingRef);
             await deleteDoc(doc(db, "users", targetUser.id, "followers", user.uid));
         } else {
-            // busca os dados do usuário logado
-            const currentUserSnap = await getDoc(doc(db, "users", user.uid));
-            const currentUserData = currentUserSnap.data();
 
             await setDoc(followingRef, {
                 uid: targetUser.id,
-                username: targetUser.username,
-                avatar: targetUser.avatar,
                 seguidoEm: serverTimestamp()
             });
 
             await setDoc(doc(db, "users", targetUser.id, "followers", user.uid), {
                 uid: user.uid,
-                username: currentUserData?.username ?? "",
-                avatar: currentUserData?.avatar ?? "",
                 seguidoEm: serverTimestamp()
             });
         }

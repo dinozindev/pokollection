@@ -82,7 +82,7 @@ const UserProfile = () => {
                     <h3 className="text-3xl">{userData?.username}</h3>
                     <div
                         onClick={() => toggleFollow(userData)}
-                        className={`shadow-2xl py-2 px-4 font-medium rounded-xl cursor-pointer transition-all ${following ? "bg-amber-800 text-white hover:text-amber-800 hover:bg-white" : "bg-white text-amber-800 hover:bg-amber-800 hover:text-white"} `}
+                        className={`shadow-2xl py-2 px-4 font-medium rounded-2xl cursor-pointer transition-all ${following ? "bg-amber-800 text-white hover:text-amber-800 hover:bg-white" : "bg-white text-amber-800 hover:bg-amber-800 hover:text-white"} `}
                     >
                         {following ? "Seguindo" : "Seguir"}
                     </div>
