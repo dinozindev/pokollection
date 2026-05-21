@@ -1,12 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import profileImage from "../../assets/profile-placeholder.png";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import { type ProfileInfo, type CardUser } from "../../types/type";
+import { type ProfileInfo, type CardUser, type CompleteUser } from "../../types/type";
 import ProfileCard from "../../components/ProfileCard";
 import { Link } from "react-router-dom";
 import types from "../../../pokemonTypes.json";
+import UserCard from "../../components/UserCard";
 
 
 const Profile = () => {
@@ -25,6 +26,12 @@ const Profile = () => {
     const [cardCount, setCardCount] = useState<number>(0);
     const [editMenu, setEditMenu] = useState<boolean>(false);
     const [showUpdate, setShowUpdate] = useState<boolean>(false);
+    const [followers, setFollowers] = useState<CompleteUser[]>([]);
+    const [followersCount, setFollowersCount] = useState<number>(0);
+    const [showFollowers, setShowFollowers] = useState<boolean>(false);
+    const [following, setFollowing] = useState<CompleteUser[]>([]);
+    const [followingCount, setFollowingCount] = useState<number>(0);
+    const [showFollowing, setShowFollowing] = useState<boolean>(false);
 
     // Obtém as informações do usuário existente
     const fetchUserInfo = async () => {
@@ -32,11 +39,81 @@ const Profile = () => {
 
         const docRef = doc(db, "users", user.uid);
         const snapshot = await getDoc(docRef);
-        console.log("snapshot", snapshot.exists(), snapshot.data());
+        // console.log("snapshot", snapshot.exists(), snapshot.data());
         if (snapshot.exists()) {
             setUserData(snapshot.data());
         }
+    }
 
+    // obtém os seguidores do usuário
+    const fetchFollowers = async () => {
+        if (!user) return;
+        try {
+            const followersRef = collection(
+                db,
+                "users",
+                user.uid,
+                "followers"
+            );
+
+            const snapshot = await getDocs(followersRef);
+
+            const followersUids = snapshot.docs.map(
+                doc => doc.data().uid
+            );
+
+            const followersData = await Promise.all(
+                followersUids.map(async (uid) => {
+                    const userDoc = await getDoc(doc(db, "users", uid));
+
+                    return {
+                        id: userDoc.id,
+                        ...userDoc.data()
+                    }
+                })
+            );
+
+            setFollowersCount(followersData.length);
+
+            setFollowers(followersData as CompleteUser[]);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    // obtém quem o usuário está seguindo
+    const fetchFollowing = async () => {
+        if (!user) return;
+        try {
+            const followingRef = collection(
+                db,
+                "users",
+                user.uid,
+                "following"
+            );
+
+            const snapshot = await getDocs(followingRef);
+
+            const followingUids = snapshot.docs.map(
+                doc => doc.data().uid
+            );
+
+            const followingData = await Promise.all(
+                followingUids.map(async (uid) => {
+                    const userDoc = await getDoc(doc(db, "users", uid));
+
+                    return {
+                        id: userDoc.id,
+                        ...userDoc.data()
+                    };
+                })
+            );
+
+            setFollowingCount(followingData.length);
+            setFollowing(followingData as CompleteUser[]);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     // gerencia o tipo favorito do usuário
@@ -119,6 +196,8 @@ const Profile = () => {
     useEffect(() => {
         if (!user) return;
         fetchUserInfo();
+        fetchFollowers();
+        fetchFollowing();
 
         const cardsRef = collection(db, "users", user.uid, "cards");
 
@@ -127,7 +206,6 @@ const Profile = () => {
                 ...(doc.data() as CardUser),
                 id: doc.id
             }));
-            // setUserCards(cards);
 
             const total = cards.reduce((sum, card) => sum + (card.quantity ?? 0), 0);
             setCardCount(total);
@@ -219,7 +297,7 @@ const Profile = () => {
                                 name="types"
                                 id="select__type"
                                 form="form__update"
-                                value={userForm.favoriteType || ""} 
+                                value={userForm.favoriteType || ""}
                                 onChange={(e) => setUserForm({
                                     ...userForm,
                                     favoriteType: e.target.value
@@ -265,12 +343,70 @@ const Profile = () => {
                     </div>
                 </div>
             )}
+            {showFollowers && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    {/* Fundo embaçado */}
+                    <div
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                        onClick={() => setShowFollowers(false)}
+                    ></div>
+                    {/* Pop-up de seguidores */}
+                    <div className="relative bg-white w-9/10 max-w-md h-4/5 p-4 rounded-2xl shadow-lg z-10">
+                        <div className="flex justify-between items-center pb-4">
+                            <p className="text-xl">Seguidores</p>
+                            <i
+                                className="fa-solid fa-xmark text-2xl cursor-pointer hover:text-amber-800 transition-all"
+                                onClick={() => setShowFollowers(false)}
+                            ></i>
+                        </div>
+                        <div className="flex flex-col items-center gap-4">
+                            {followersCount > 0 ? followers.map(follow => (
+                                <UserCard user={follow}/>
+                            )) : <p className="text-center">Ninguém está te seguindo ainda!</p>}
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showFollowing && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    {/* Fundo embaçado */}
+                    <div
+                        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                        onClick={() => setShowFollowing(false)}
+                    ></div>
+                    {/* Pop-up de seguindo */}
+                    <div className="relative bg-slate-100 w-9/10 max-w-md h-4/5 p-4 rounded-2xl shadow-lg z-10">
+                        <div className="flex justify-between items-center pb-4">
+                            <p className="text-xl">Seguindo</p>
+                            <i
+                                className="fa-solid fa-xmark text-2xl cursor-pointer hover:text-amber-800 transition-all"
+                                onClick={() => setShowFollowing(false)}
+                            ></i>
+                        </div>
+                        <div className="flex flex-col items-center gap-4">
+                            {followingCount > 0 ? following.map(follow => (
+                                <UserCard user={follow}/>
+                            )) : <p className="text-center">Você não está seguindo ninguém ainda!</p>}
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-30 pt-30 w-full">
                 <div className="flex items-center gap-2">
                     <h3 className="text-3xl">{userData?.username}</h3>
                     <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all md:text-xl" onClick={handleEditClick}></i>
                 </div>
                 <p className="opacity-50">{userData?.email}</p>
+                <div className="flex w-9/10 md:w-1/4 gap-4 justify-center">
+                    <button onClick={() => setShowFollowing(true)} className="flex gap-1.5 text-md p-2 md:py-3 items-center justify-center hover:border-amber-800 transition-all cursor-pointer hover:underline">
+                        <span className="text-amber-800 font-bold">{followingCount}</span>
+                        <p>Seguindo</p>
+                    </button>
+                    <button onClick={() => setShowFollowers(true)} className="flex gap-1.5 text-md p-2 md:py-3 items-center justify-center hover:border-amber-800 transition-all cursor-pointer hover:underline">
+                        <span className="text-amber-800 font-bold">{followersCount}</span>
+                        <p>Seguidores</p>
+                    </button>
+                </div>
                 <p>{userData?.bio || "Nenhuma informação"}</p>
                 <div className="flex justify-center flex-wrap mt-4 mx-4 text-xl">
                     <ProfileCard>
@@ -307,15 +443,15 @@ const Profile = () => {
                         </div>
                     </ProfileCard>
                 </div>
-                <div className="flex gap-2 mt-4 mx-4 w-full items-center lg:w-2/5">
-                    <Link to="/favorites" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 ml-4 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                <div className="flex flex-wrap md:flex-nowrap gap-2 mt-4 mx-4 w-full items-center justify-center lg:w-2/5">
+                    <Link to="/favorites" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Favoritos</p>
                         <i className="fa-solid fa-star text-amber-300"></i>
                     </Link>
                     <Link to="/collection" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Coleção</p>
                         <i className="fa-solid fa-layer-group text-amber-800"></i></Link>
-                    <Link to="/binders" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 mr-4 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                    <Link to="/binders" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Binders</p>
                         <i className="fa-solid fa-folder text-amber-800"></i></Link>
                 </div>
@@ -325,8 +461,8 @@ const Profile = () => {
                     Perfil salvo com sucesso!
                 </div>
             )}
-        </section >
+        </section>
     )
 }
 
-export default Profile
+export default Profile;

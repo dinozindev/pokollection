@@ -78,7 +78,7 @@ const Register = () => {
                     type="password"
                     value={user.password}
                     onChange={(e) => setUser({ ...user, password: e.target.value })}
-                    pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$" 
+                    pattern=".{6,}"
                     required
                 />
                 {error && (
