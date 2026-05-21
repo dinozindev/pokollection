@@ -7,7 +7,6 @@ import { useCards } from "../../hooks/useCards";
 import CardDiv from "../../components/CardDiv";
 
 const Collection = () => {
-
     const { user } = useContext(AuthContext);
     const { addCard, removeCard } = useCards();
     const [userCards, setUserCards] = useState<CardUser[]>([]);

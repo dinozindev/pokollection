@@ -12,12 +12,22 @@ const Register = () => {
         password: "",
         username: ""
     });
-    const [error, setError] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
+    const [alert, setAlert] = useState<string>("");
     const navigate = useNavigate();
 
     // Cria uma nova conta no Firebase Auth
     const createAccount = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        setError("");
+
+        if (user.username.length < 6) {
+            setError(
+                "O nome de usuário deve ter pelo menos 6 caracteres."
+            );
+            return;
+        }
 
         try {
             const response = await firebase.createUserWithEmailAndPassword(
@@ -25,6 +35,8 @@ const Register = () => {
                 user.email,
                 user.password
             );
+
+            await firebase.sendEmailVerification(response.user);
 
             await setDoc(doc(db, "users", response.user.uid), {
                 username: user.username,
@@ -37,52 +49,64 @@ const Register = () => {
                 favoriteGen: ""
             })
 
-            console.log(response.user);
-            setError(false);
+            setAlert("Verifique seu e-mail para ativar sua conta.");
+            setTimeout(() => setAlert(""), 5000);
+
             navigate("/cards");
 
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            setError(true);
+
+            switch (error.code) {
+                case "auth/email-already-in-use":
+                    setError("Este e-mail já está em uso.");
+                    break;
+                case "auth/invalid-email":
+                    setError("Formato de e-mail inválido.");
+                    break;
+                case "auth/weak-password":
+                    setError("A senha deve ter pelo menos 6 caracteres.");
+                    break;
+                default:
+                    setError("Ocorreu um erro ao criar a conta.")
+            }
+
         }
     };
 
     return (
         <section className="flex flex-col justify-center items-center h-screen">
             <h2 className="text-3xl">Cadastro</h2>
-            <form onSubmit={createAccount} className="flex flex-col py-8 gap-3 w-2/3 lg:w-1/4">
-                <label htmlFor="input__username">Nome de usuário</label>
+            <form onSubmit={createAccount} className="flex flex-col py-8 gap-6 w-2/3 lg:w-1/4">
                 <input
                     id="input__username"
-                    className="border rounded-xl px-2 py-1"
+                    className="rounded-2xl px-2 py-3 bg-white"
                     type="text"
                     value={user.username}
                     onChange={(e) => setUser({ ...user, username: e.target.value })}
-                    pattern="^[a-zA-Z0-9]{6,}$"
                     required
+                    placeholder="Nome de Usuário"
                 />
-                <label htmlFor="input__email">Email</label>
                 <input
                     id="input__email"
-                    className="border rounded-xl px-2 py-1"
+                    className="rounded-2xl px-2 py-3 bg-white"
                     type="text"
                     value={user.email}
                     onChange={(e) => setUser({ ...user, email: e.target.value })}
-                    pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                     required
+                    placeholder="Email"
                 />
-                <label htmlFor="input__senha">Senha</label>
                 <input
                     id="input__senha"
-                    className="border rounded-xl px-2 py-1"
+                    className="rounded-2xl px-2 py-3 bg-white"
                     type="password"
                     value={user.password}
                     onChange={(e) => setUser({ ...user, password: e.target.value })}
-                    pattern=".{6,}"
                     required
+                    placeholder="Senha"
                 />
                 {error && (
-                    <span className="text-red-500 text-center">E-mail informado já está sendo utilizado.</span>
+                    <span className="text-red-500 text-center">{error}</span>
                 )}
                 <div className="flex justify-center">
                     <button
@@ -92,6 +116,11 @@ const Register = () => {
                         Cadastrar
                     </button>
                 </div>
+                {alert && (
+                    <div className="fixed bg-white text-black px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl top-30">
+                        {alert}
+                    </div>
+                )}
             </form>
         </section>
     )

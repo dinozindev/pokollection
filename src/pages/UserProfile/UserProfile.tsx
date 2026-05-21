@@ -194,7 +194,7 @@ const UserProfile = () => {
                     alt="Profile Avatar"
                 />
             </div>
-            <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-30 pt-30 w-full">
+            <div className="flex flex-col items-center gap-4 bg-gray-100 h-full rounded-t-4xl mt-30 pt-30 pb-20 w-full">
                 <div className="flex items-center gap-4 p-1">
                     <h3 className="text-3xl">{userData?.username}</h3>
                     <div

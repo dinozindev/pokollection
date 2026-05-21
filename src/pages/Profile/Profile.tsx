@@ -12,7 +12,6 @@ import UserCard from "../../components/UserCard";
 
 const Profile = () => {
     const { user } = useContext(AuthContext);
-
     const [userForm, setUserForm] = useState<ProfileInfo>({
         username: "",
         favoritePokemon: "",
@@ -225,14 +224,14 @@ const Profile = () => {
                 />
             </div>
             {editMenu && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
+                <div className="fixed inset-0 flex items-center justify-center z-50 h-full">
                     {/* Fundo embaçado */}
                     <div
                         className="absolute inset-0 bg-black/40 backdrop-blur-sm"
                         onClick={() => setEditMenu(false)}
                     ></div>
                     {/* Pop-up de edição */}
-                    <div className="relative bg-white w-4/5 max-w-md p-4 rounded-2xl shadow-lg z-10">
+                    <div className="relative bg-white w-4/5 max-w-md p-4 rounded-2xl shadow-lg z-10 max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center">
                             <p className="text-xl">Editar Perfil</p>
                             <i
@@ -391,7 +390,7 @@ const Profile = () => {
                     </div>
                 </div>
             )}
-            <div className="flex flex-col items-center gap-4 bg-gray-100 h-screen rounded-t-4xl mt-30 pt-30 w-full">
+            <div className="flex flex-col items-center gap-4 bg-gray-100 h-full rounded-t-4xl mt-30 pt-30 pb-20 w-full">
                 <div className="flex items-center gap-2">
                     <h3 className="text-3xl">{userData?.username}</h3>
                     <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all md:text-xl" onClick={handleEditClick}></i>
@@ -407,7 +406,7 @@ const Profile = () => {
                         <p>Seguidores</p>
                     </button>
                 </div>
-                <p>{userData?.bio || "Nenhuma informação"}</p>
+                <p>{ userData?.bio || "Nenhuma informação" }</p>
                 <div className="flex justify-center flex-wrap mt-4 mx-4 text-xl">
                     <ProfileCard>
                         <p className="h-1/2">Cartas</p>
