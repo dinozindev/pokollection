@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext";
-import { collection, doc, getDoc, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import type { CardUser, CompleteUser } from "../../types/type";
+import type { CardUser } from "../../types/type";
 import ProfileCard from "../../components/ProfileCard";
 import profileImage from "../../assets/profile-placeholder.png";
 import { useFriends } from "../../hooks/useFriends";
@@ -16,11 +16,7 @@ const UserProfile = () => {
     const [userData, setUserData] = useState<any>();
     const [cardCount, setCardCount] = useState<number>();
     const [following, setFollowing] = useState<boolean>(false);
-
-    const [followingList, setFollowingList] = useState<CompleteUser[]>([]);
     const [followingCount, setFollowingCount] = useState<number>(0);
-
-    const [followers, setFollowers] = useState<CompleteUser[]>([]);
     const [followersCount, setFollowersCount] = useState<number>(0);
 
     const fetchUserInfo = async () => {
@@ -89,8 +85,6 @@ const UserProfile = () => {
                     };
                 })
             );
-
-            setFollowers(followersData as CompleteUser[]);
             setFollowersCount(followersData.length);
         });
 
@@ -123,8 +117,6 @@ const UserProfile = () => {
                     };
                 })
             );
-
-            setFollowingList(followingData as CompleteUser[]);
             setFollowingCount(followingData.length);
         });
 
