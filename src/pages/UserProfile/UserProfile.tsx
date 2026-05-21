@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom"
 import { AuthContext } from "../../context/AuthContext";
-import { collection, doc, getDoc, onSnapshot } from "firebase/firestore";
+import { collection, doc, getDoc, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
-import type { CardUser } from "../../types/type";
+import type { CardUser, CompleteUser } from "../../types/type";
 import ProfileCard from "../../components/ProfileCard";
 import profileImage from "../../assets/profile-placeholder.png";
 import { useFriends } from "../../hooks/useFriends";
@@ -16,6 +16,12 @@ const UserProfile = () => {
     const [userData, setUserData] = useState<any>();
     const [cardCount, setCardCount] = useState<number>();
     const [following, setFollowing] = useState<boolean>(false);
+
+    const [followingList, setFollowingList] = useState<CompleteUser[]>([]);
+    const [followingCount, setFollowingCount] = useState<number>(0);
+
+    const [followers, setFollowers] = useState<CompleteUser[]>([]);
+    const [followersCount, setFollowersCount] = useState<number>(0);
 
     const fetchUserInfo = async () => {
         if (!user) return;
@@ -31,6 +37,14 @@ const UserProfile = () => {
         }
     }
 
+    // busca dados do perfil acessado
+    useEffect(() => {
+        if (!id) return;
+
+        fetchUserInfo();
+    }, [id]);
+
+    // verifica se o usuário segue o perfil acessado
     useEffect(() => {
         if (!user || !id) return;
 
@@ -49,9 +63,77 @@ const UserProfile = () => {
         return () => unsubscribe();
     }, [user, id]);
 
+    // followers em tempo real
     useEffect(() => {
-        if (!user) return;
-        fetchUserInfo();
+        if (!id) return;
+
+        const followersRef = collection(
+            db,
+            "users",
+            id,
+            "followers"
+        );
+
+        const unsubscribe = onSnapshot(followersRef, async (snapshot) => {
+            const followersUids = snapshot.docs.map(
+                doc => doc.data().uid
+            );
+
+            const followersData = await Promise.all(
+                followersUids.map(async (uid) => {
+                    const userDoc = await getDoc(doc(db, "users", uid));
+
+                    return {
+                        id: userDoc.id,
+                        ...userDoc.data()
+                    };
+                })
+            );
+
+            setFollowers(followersData as CompleteUser[]);
+            setFollowersCount(followersData.length);
+        });
+
+        return () => unsubscribe();
+    }, [id]);
+
+    // following em tempo real
+    useEffect(() => {
+        if (!id) return;
+
+        const followingRef = collection(
+            db,
+            "users",
+            id,
+            "following"
+        );
+
+        const unsubscribe = onSnapshot(followingRef, async (snapshot) => {
+            const followingUids = snapshot.docs.map(
+                doc => doc.data().uid
+            );
+
+            const followingData = await Promise.all(
+                followingUids.map(async (uid) => {
+                    const userDoc = await getDoc(doc(db, "users", uid));
+
+                    return {
+                        id: userDoc.id,
+                        ...userDoc.data()
+                    };
+                })
+            );
+
+            setFollowingList(followingData as CompleteUser[]);
+            setFollowingCount(followingData.length);
+        });
+
+        return () => unsubscribe();
+    }, [id]);
+
+    // cartas em tempo real
+    useEffect(() => {
+        if (!id) return;
 
         const cardsRef = collection(db, "users", id, "cards");
 
@@ -60,13 +142,56 @@ const UserProfile = () => {
                 ...(doc.data() as CardUser),
                 id: doc.id
             }));
-            const total = cards.reduce((sum, card) => sum + (card.quantity ?? 0), 0);
+
+            const total = cards.reduce(
+                (sum, card) => sum + (card.quantity ?? 0),
+                0
+            );
+
             setCardCount(total);
         });
 
         return () => unsubscribe();
+    }, [id]);
 
-    }, [user])
+    // useEffect(() => {
+    //     if (!user || !id) return;
+
+    //     const followingRef = doc(
+    //         db,
+    //         "users",
+    //         user.uid,
+    //         "following",
+    //         id
+    //     );
+
+    //     const unsubscribe = onSnapshot(followingRef, (snapshot) => {
+    //         setFollowing(snapshot.exists());
+    //     });
+
+    //     return () => unsubscribe();
+    // }, [user, id]);
+
+    // useEffect(() => {
+    //     if (!user) return;
+    //     fetchUserInfo();
+    //     fetchFollowers();
+    //     fetchFollowing();
+
+    //     const cardsRef = collection(db, "users", id, "cards");
+
+    //     const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
+    //         const cards: CardUser[] = snapshot.docs.map((doc) => ({
+    //             ...(doc.data() as CardUser),
+    //             id: doc.id
+    //         }));
+    //         const total = cards.reduce((sum, card) => sum + (card.quantity ?? 0), 0);
+    //         setCardCount(total);
+    //     });
+
+    //     return () => unsubscribe();
+
+    // }, [user])
 
     return (
         <section className="pt-4 flex flex-col items-center">
@@ -87,7 +212,16 @@ const UserProfile = () => {
                         {following ? "Seguindo" : "Seguir"}
                     </div>
                 </div>
-                {/* <p>0 Seguidores</p> */}
+                <div className="flex w-9/10 md:w-1/4 gap-4 justify-center">
+                    <div className="flex gap-1.5 text-md p-2 md:py-3 items-center justify-center hover:border-amber-800 transition-all">
+                        <span className="text-amber-800 font-bold">{followingCount}</span>
+                        <p>Seguindo</p>
+                    </div>
+                    <div className="flex gap-1.5 text-md p-2 md:py-3 items-center justify-center hover:border-amber-800 transition-all">
+                        <span className="text-amber-800 font-bold">{followersCount}</span>
+                        <p>Seguidores</p>
+                    </div>
+                </div>
                 <p>{userData?.bio || "Nenhuma informação"}</p>
                 <div className="flex justify-center flex-wrap mt-4 mx-4 text-xl">
                     <ProfileCard>
