@@ -15,7 +15,6 @@ import { useEffect } from "react"
 import { limparCacheExpirado, limparCacheMaisAntigo } from "./utils/storage"
 import WishList from "./pages/WishList/WishList"
 import Social from "./pages/Social/Social"
-import UserProfile from "./pages/UserProfile/UserProfile"
 
 const App = () => {
 
@@ -54,7 +53,7 @@ useEffect(() => {
           <Route path="/binders" element={<ProtectedRoute><Binders /></ProtectedRoute>} />
           <Route path="/binders/:id" element={<ProtectedRoute><BinderDetails /></ProtectedRoute>} />
           <Route path="/social" element={<ProtectedRoute><Social /></ProtectedRoute>} />
-          <Route path="/social/:id" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+          <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </>

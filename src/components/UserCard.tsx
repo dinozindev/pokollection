@@ -14,7 +14,7 @@ const UserCard = ({ user }: UserCardProps) => {
             </div>
             <div className="flex items-center justify-between w-2/3">
                 <h2>{user.username}</h2>
-                <Link className="bg-amber-800 text-white py-2 px-4 rounded-xl hover:text-amber-800 hover:bg-white transition-all shadow-2xl font-medium" to={`/social/${user.id}`}>Perfil</Link>
+                <Link className="bg-amber-800 text-white py-2 px-4 rounded-xl hover:text-amber-800 hover:bg-white transition-all shadow-2xl font-medium" to={`/profile/${user.id}`}>Perfil</Link>
             </div>
         </div>
     )

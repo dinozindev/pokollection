@@ -1,17 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import profileImage from "../../assets/profile-placeholder.png";
 import { AuthContext } from "../../context/AuthContext";
-import { collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { type ProfileInfo, type CardUser, type CompleteUser } from "../../types/type";
 import ProfileCard from "../../components/ProfileCard";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import types from "../../../pokemonTypes.json";
 import UserCard from "../../components/UserCard";
+import { useFriends } from "../../hooks/useFriends";
 
 
 const Profile = () => {
+    const { id } = useParams();
+    const { toggleFollow } = useFriends();
     const { user } = useContext(AuthContext);
+    if (!user) return;
     const [userForm, setUserForm] = useState<ProfileInfo>({
         username: "",
         favoritePokemon: "",
@@ -32,88 +36,11 @@ const Profile = () => {
     const [followingCount, setFollowingCount] = useState<number>(0);
     const [showFollowing, setShowFollowing] = useState<boolean>(false);
 
-    // Obtém as informações do usuário existente
-    const fetchUserInfo = async () => {
-        if (!user) return;
+    // verifica se vc esta seguindo o usuário
+    const [isFollowing, setIsFollowing] = useState(false);
 
-        const docRef = doc(db, "users", user.uid);
-        const snapshot = await getDoc(docRef);
-        // console.log("snapshot", snapshot.exists(), snapshot.data());
-        if (snapshot.exists()) {
-            setUserData(snapshot.data());
-        }
-    }
-
-    // obtém os seguidores do usuário
-    const fetchFollowers = async () => {
-        if (!user) return;
-        try {
-            const followersRef = collection(
-                db,
-                "users",
-                user.uid,
-                "followers"
-            );
-
-            const snapshot = await getDocs(followersRef);
-
-            const followersUids = snapshot.docs.map(
-                doc => doc.data().uid
-            );
-
-            const followersData = await Promise.all(
-                followersUids.map(async (uid) => {
-                    const userDoc = await getDoc(doc(db, "users", uid));
-
-                    return {
-                        id: userDoc.id,
-                        ...userDoc.data()
-                    }
-                })
-            );
-
-            setFollowersCount(followersData.length);
-
-            setFollowers(followersData as CompleteUser[]);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    // obtém quem o usuário está seguindo
-    const fetchFollowing = async () => {
-        if (!user) return;
-        try {
-            const followingRef = collection(
-                db,
-                "users",
-                user.uid,
-                "following"
-            );
-
-            const snapshot = await getDocs(followingRef);
-
-            const followingUids = snapshot.docs.map(
-                doc => doc.data().uid
-            );
-
-            const followingData = await Promise.all(
-                followingUids.map(async (uid) => {
-                    const userDoc = await getDoc(doc(db, "users", uid));
-
-                    return {
-                        id: userDoc.id,
-                        ...userDoc.data()
-                    };
-                })
-            );
-
-            setFollowingCount(followingData.length);
-            setFollowing(followingData as CompleteUser[]);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    const targetUid = id || user.uid;
+    const isOwnProfile = !id;
 
     // gerencia o tipo favorito do usuário
     // const selectedType = types.find(
@@ -191,28 +118,140 @@ const Profile = () => {
         }
     };
 
-    // busca todas as cartas salvas do usuário e contabiliza elas em um estado de total
     useEffect(() => {
-        if (!user) return;
-        fetchUserInfo();
-        fetchFollowers();
-        fetchFollowing();
+        if (!targetUid) return;
 
-        const cardsRef = collection(db, "users", user.uid, "cards");
+        setUserData(null);
+        setFollowers([]);
+        setFollowing([]);
+        setCardCount(0);
 
-        const unsubscribe = onSnapshot(cardsRef, (snapshot) => {
+        const userRef = doc(db, "users", targetUid);
+
+        const unsubscribeUser = onSnapshot(userRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setUserData({
+                    ...snapshot.data(),
+                    id: snapshot.id
+                });
+            }
+        });
+
+        const followersRef = collection(
+            db,
+            "users",
+            targetUid,
+            "followers"
+        );
+
+        const unsubscribeFollowers = onSnapshot(
+            followersRef,
+            async (snapshot) => {
+                const followersUids = snapshot.docs.map(
+                    doc => doc.data().uid
+                );
+
+                const followersData = await Promise.all(
+                    followersUids.map(async (uid) => {
+                        const userDoc = await getDoc(
+                            doc(db, "users", uid)
+                        );
+
+                        return {
+                            id: userDoc.id,
+                            ...userDoc.data()
+                        };
+                    })
+                );
+
+                setFollowersCount(followersData.length);
+                setFollowers(followersData as CompleteUser[]);
+            }
+        );
+
+        const followingRef = collection(
+            db,
+            "users",
+            targetUid,
+            "following"
+        );
+
+        const unsubscribeFollowing = onSnapshot(
+            followingRef,
+            async (snapshot) => {
+                const followingUids = snapshot.docs.map(
+                    doc => doc.data().uid
+                );
+
+                const followingData = await Promise.all(
+                    followingUids.map(async (uid) => {
+                        const userDoc = await getDoc(
+                            doc(db, "users", uid)
+                        );
+
+                        return {
+                            id: userDoc.id,
+                            ...userDoc.data()
+                        };
+                    })
+                );
+
+                setFollowingCount(followingData.length);
+                setFollowing(followingData as CompleteUser[]);
+            }
+        );
+
+        const cardsRef = collection(
+            db,
+            "users",
+            targetUid,
+            "cards"
+        );
+
+        const unsubscribeCards = onSnapshot(cardsRef, (snapshot) => {
             const cards: CardUser[] = snapshot.docs.map((doc) => ({
                 ...(doc.data() as CardUser),
                 id: doc.id
             }));
 
-            const total = cards.reduce((sum, card) => sum + (card.quantity ?? 0), 0);
+            const total = cards.reduce(
+                (sum, card) => sum + (card.quantity ?? 0),
+                0
+            );
+
             setCardCount(total);
+        });
+
+        return () => {
+            unsubscribeUser();
+            unsubscribeFollowers();
+            unsubscribeFollowing();
+            unsubscribeCards();
+        };
+
+    }, [targetUid]);
+
+    useEffect(() => {
+        if (!user || !targetUid || isOwnProfile) {
+            setIsFollowing(false);
+            return;
+        }
+
+        const followingRef = doc(
+            db,
+            "users",
+            user.uid,
+            "following",
+            targetUid
+        );
+
+        const unsubscribe = onSnapshot(followingRef, (snapshot) => {
+            setIsFollowing(snapshot.exists());
         });
 
         return () => unsubscribe();
 
-    }, [user])
+    }, [user, targetUid, isOwnProfile]);
 
     return (
         <section className="pt-4 flex flex-col items-center">
@@ -360,7 +399,7 @@ const Profile = () => {
                         </div>
                         <div className="flex flex-col items-center gap-4">
                             {followersCount > 0 ? followers.map(follow => (
-                                <UserCard user={follow}/>
+                                <UserCard user={follow} />
                             )) : <p className="text-center">Ninguém está te seguindo ainda!</p>}
                         </div>
                     </div>
@@ -384,16 +423,33 @@ const Profile = () => {
                         </div>
                         <div className="flex flex-col items-center gap-4">
                             {followingCount > 0 ? following.map(follow => (
-                                <UserCard user={follow}/>
+                                <UserCard user={follow} />
                             )) : <p className="text-center">Você não está seguindo ninguém ainda!</p>}
                         </div>
                     </div>
                 </div>
             )}
             <div className="flex flex-col items-center gap-4 bg-gray-100 h-full rounded-t-4xl mt-30 pt-30 pb-20 w-full">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-4">
                     <h3 className="text-3xl">{userData?.username}</h3>
-                    <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all md:text-xl" onClick={handleEditClick}></i>
+                    {isOwnProfile ? (
+                        <i className="fa-solid fa-pen-to-square cursor-pointer hover:text-amber-800 transition-all md:text-xl" onClick={handleEditClick}></i>
+                    ) : (
+                        <div
+                            onClick={() => toggleFollow(userData)}
+                            className={`
+                                    shadow-2xl py-2 px-4 font-medium rounded-2xl
+                                    cursor-pointer transition-all
+                                    ${isFollowing
+                                    ? "bg-amber-800 text-white hover:text-amber-800 hover:bg-white"
+                                    : "bg-white text-amber-800 hover:bg-amber-800 hover:text-white"
+                                }
+                            `}
+                        >
+                            {isFollowing ? "Seguindo" : "Seguir"}
+                        </div>
+                    )}
+
                 </div>
                 <p className="opacity-50">{userData?.email}</p>
                 <div className="flex w-9/10 md:w-1/4 gap-4 justify-center">
@@ -406,7 +462,7 @@ const Profile = () => {
                         <p>Seguidores</p>
                     </button>
                 </div>
-                <p>{ userData?.bio || "Nenhuma informação" }</p>
+                <p>{userData?.bio || "Nenhuma informação"}</p>
                 <div className="flex justify-center flex-wrap mt-4 mx-4 text-xl">
                     <ProfileCard>
                         <p className="h-1/2">Cartas</p>
