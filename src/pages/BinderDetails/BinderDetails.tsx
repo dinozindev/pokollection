@@ -8,8 +8,13 @@ import { db } from "../../firebase/firebase";
 import placeholder from "../../assets/card-placeholder.png";
 
 const BinderDetails = () => {
-    const { id } = useParams();
+    const { userId, binderId } = useParams();
     const { user } = useContext(AuthContext);
+    if (!user) return;
+
+    const targetUid = userId || user.uid;
+    const isOwnProfile = !userId;
+
     const { removeCardFromBinder, removeBinder } = useBinders();
     const [binder, setBinder] = useState<BinderWithCards>();
     const [binderDelete, setBinderDelete] = useState<boolean>(false);
@@ -37,10 +42,10 @@ const BinderDetails = () => {
     }
 
     useEffect(() => {
-        if (!user || !id) return;
+        if (!targetUid || !binderId) return;
 
-        const binderRef = doc(db, "users", user.uid, "binders", id);
-        const cartasRef = collection(db, "users", user.uid, "binders", id, "cartas");
+        const binderRef = doc(db, "users", targetUid, "binders", binderId);
+        const cartasRef = collection(db, "users", targetUid, "binders", binderId, "cartas");
 
         const unsubscribeBinder = onSnapshot(binderRef, (binderSnap) => {
             if (!binderSnap.exists()) return;
@@ -68,7 +73,7 @@ const BinderDetails = () => {
         });
 
         return () => unsubscribeBinder();
-    }, [user, id]);
+    }, [targetUid, binderId]);
 
     if (!binder) return <p>Carregando...</p>;
 
@@ -97,11 +102,14 @@ const BinderDetails = () => {
                 </div>
             )}
             <div className="flex items-center justify-start gap-8 mt-4 mx-10 lg:p-0">
-                <Link to="/binders">
+                <Link to={isOwnProfile ? "/binders" : `/profile/${targetUid}/binders`}>
                     <i className="fa-solid fa-chevron-left bg-white pr-10 pl-6 py-6 text-2xl text-center rounded-2xl hover:bg-amber-800 hover:text-white transition-all cursor-pointer"></i>
                 </Link>
                 <h2 className="text-4xl font-medium text-amber-800 bg-white p-4 rounded-xl shadow-xl text-center">{binder.nome}</h2>
-                <i className="fa-solid fa-trash-can bg-white pr-10 pl-5 py-6 text-2xl text-center rounded-2xl hover:bg-amber-800 hover:text-white transition-all cursor-pointer" onClick={() => setBinderDelete(true)}></i>
+                {isOwnProfile && (
+                    <i className="fa-solid fa-trash-can bg-white pr-10 pl-5 py-6 text-2xl text-center rounded-2xl hover:bg-amber-800 hover:text-white transition-all cursor-pointer" onClick={() => setBinderDelete(true)}></i>
+                )}
+
             </div>
             <div className="flex items-center pb-10 gap-3">
             </div>
@@ -145,12 +153,14 @@ const BinderDetails = () => {
                                 alt="Pokémon Card"
                                 onClick={() => setPreviewCard(carta)}
                             />
-                            <div className="absolute top-1 right-1 z-10 bg-white/70 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">
-                                <i
-                                    className="fa-solid fa-xmark text-amber-800 hover:text-black transition-all cursor-pointer"
-                                    onClick={() => removeCardFromBinder(binder.id, carta)}
-                                ></i>
-                            </div>
+                            {isOwnProfile && (
+                                <div className="absolute top-1 right-1 z-10 bg-white/70 rounded-full w-6 h-6 flex items-center justify-center shadow-sm">
+                                    <i
+                                        className="fa-solid fa-xmark text-amber-800 hover:text-black transition-all cursor-pointer"
+                                        onClick={() => removeCardFromBinder(binder.id, carta)}
+                                    ></i>
+                                </div>
+                            )}
                         </div>
                     ))}
 

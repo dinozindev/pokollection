@@ -16,6 +16,9 @@ const Profile = () => {
     const { toggleFollow } = useFriends();
     const { user } = useContext(AuthContext);
     if (!user) return;
+    const targetUid = id || user.uid;
+    const isOwnProfile = !id;
+    
     const [userForm, setUserForm] = useState<ProfileInfo>({
         username: "",
         favoritePokemon: "",
@@ -38,9 +41,6 @@ const Profile = () => {
 
     // verifica se vc esta seguindo o usuário
     const [isFollowing, setIsFollowing] = useState(false);
-
-    const targetUid = id || user.uid;
-    const isOwnProfile = !id;
 
     // gerencia o tipo favorito do usuário
     // const selectedType = types.find(
@@ -121,6 +121,8 @@ const Profile = () => {
     useEffect(() => {
         if (!targetUid) return;
 
+        setShowFollowing(false);
+        setShowFollowers(false);
         setUserData(null);
         setFollowers([]);
         setFollowing([]);
@@ -451,7 +453,13 @@ const Profile = () => {
                     )}
 
                 </div>
-                <p className="opacity-50">{userData?.email}</p>
+                {
+                    isOwnProfile
+                        ?
+                        <p className="opacity-50">{userData?.email}</p>
+                        :
+                        <></>
+                }
                 <div className="flex w-9/10 md:w-1/4 gap-4 justify-center">
                     <button onClick={() => setShowFollowing(true)} className="flex gap-1.5 text-md p-2 md:py-3 items-center justify-center hover:border-amber-800 transition-all cursor-pointer hover:underline">
                         <span className="text-amber-800 font-bold">{followingCount}</span>
@@ -499,16 +507,19 @@ const Profile = () => {
                     </ProfileCard>
                 </div>
                 <div className="flex flex-wrap md:flex-nowrap gap-2 mt-4 mx-4 w-full items-center justify-center lg:w-2/5">
-                    <Link to="/favorites" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                    <Link to={isOwnProfile ? "/favorites" : `/favorites/${targetUid}`} className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Favoritos</p>
                         <i className="fa-solid fa-star text-amber-300"></i>
                     </Link>
-                    <Link to="/collection" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                    <Link to={isOwnProfile ? "/collection" : `/collection/${targetUid}`} className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Coleção</p>
                         <i className="fa-solid fa-layer-group text-amber-800"></i></Link>
-                    <Link to="/binders" className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                    <Link to={isOwnProfile ? "/binders" : `/profile/${targetUid}/binders`} className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
                         <p>Binders</p>
                         <i className="fa-solid fa-folder text-amber-800"></i></Link>
+                    <Link to={isOwnProfile ? "/wishlist" : `/wishlist/${targetUid}`} className="flex border border-gray-300 text-xl px-4 py-2 md:py-6 w-1/3 items-center justify-between hover:border-amber-800 transition-all">
+                        <p>Wishlist</p>
+                        <i className="fa-solid fa-clipboard-list text-amber-800"></i></Link>
                 </div>
             </div>
             {showUpdate && (
