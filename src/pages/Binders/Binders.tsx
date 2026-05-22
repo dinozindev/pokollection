@@ -3,6 +3,7 @@ import { AuthContext } from "../../context/AuthContext"
 import { useBinders } from "../../hooks/useBinders";
 import type { BinderWithCards } from "../../types/type";
 import BinderCard from "../../components/BinderCard";
+import { useParams } from "react-router-dom";
 
 
 const Binders = () => {
@@ -13,18 +14,23 @@ const Binders = () => {
   const [binderName, setBinderName] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
 
+  const { userId } = useParams();
   const { user } = useContext(AuthContext);
+  if (!user) return;
+
+  const targetUid = userId || user.uid;
+  const isOwnProfile = !userId;
 
   useEffect(() => {
-    fetchAllBindersWithCards().then(result => {
+    fetchAllBindersWithCards(targetUid).then(result => {
       if (result) setBinders(result);
     });
-  }, [user]);
+  }, [targetUid]);
 
   const handleCreateBinder = async (nome: string) => {
     await createBinder(nome);
 
-    const result = await fetchAllBindersWithCards();
+    const result = await fetchAllBindersWithCards(targetUid);
     if (result) setBinders(result);
 
     setBinderWindow(false);
@@ -84,16 +90,21 @@ const Binders = () => {
       )
       }
       <div className="flex items-center mt-4 mb-10 gap-8">
-        <h2 className="text-4xl font-medium text-amber-800 bg-white p-4 rounded-xl shadow-xl">Meus Binders</h2>
-        <i
+        <h2 className="text-4xl font-medium text-amber-800 bg-white p-4 rounded-xl shadow-xl">{isOwnProfile ? "Meus Binders" : "Binders"}</h2>
+        {isOwnProfile ? <i
           className="fa-solid fa-plus bg-white pr-10 pl-5 py-6 text-2xl rounded-xl hover:bg-amber-800 hover:text-white transition-all cursor-pointer"
           onClick={() => setBinderWindow(true)}
-        ></i>
+        ></i> : <></>}
       </div>
       <div className="flex gap-4 flex-wrap justify-center w-full">
         {/* Lista de binders */}
         {binders.length !== 0 ? binders?.map(binder => (
+          isOwnProfile 
+          ? 
           <BinderCard binder={binder} key={binder.id} />
+          :
+          <BinderCard binder={binder} uid={targetUid} key={binder.id} />
+          
         )) : <p>Nenhum binder criado ainda!</p>}
       </div>
       {show && (

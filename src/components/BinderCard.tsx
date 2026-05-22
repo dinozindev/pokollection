@@ -4,12 +4,16 @@ import placeholder from "../assets/card-placeholder.png";
 
 type BinderCardProps = {
     binder: BinderWithCards;
+    uid?: string;
 }
 
-const BinderCard = ({binder} : BinderCardProps) => {
+const BinderCard = ({binder, uid} : BinderCardProps) => {
+
+
+    
     return (
         <Link
-            to={`/binders/${binder.id}`}
+            to={uid ? `/profile/${uid}/binders/${binder.id}` : `/binders/${binder.id}`}
             key={binder.id}
             className="group bg-slate-50 p-5 m-5 w-full sm:w-1/2 lg:w-1/4 flex flex-col items-center gap-6 cursor-pointer hover:bg-white hover:shadow-2xl hover:-translate-y-3 transition-all duration-300 rounded-2xl border border-slate-200"
         >

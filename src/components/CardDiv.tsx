@@ -37,21 +37,32 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
                     <div className="relative bg-white w-[90%] max-w-md lg:max-w-3xl lg:w-[80%] p-4 rounded-2xl shadow-lg z-10 flex flex-col gap-4">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-1">
-                                {favorites && <i
-                                    className={`cursor-pointer transition-all hover:text-yellow-300 ${favorites[card.id]
-                                        ? "fa-solid fa-star text-yellow-400"
-                                        : "fa-regular fa-star text-gray-400"
-                                        }`}
-                                    onClick={() => toggleFavorite?.(card)}
-                                ></i>}
-                                {toggleWishlist && (
+                                {favorites && (
+                                    <button
+                                        type="button"
+                                        title="Favoritar carta"
+                                        onClick={() => toggleFavorite?.(card)}
+                                        className="cursor-pointer"
+                                    >
                                         <i
-                                            className={`cursor-pointer transition-all ${wishlist?.[card.id]
-                                                ? "fa-solid fa-circle-check text-green-400 hover:text-green-800"
-                                                : "fa-solid fa-clipboard-list text-amber-800 hover:text-black"
-                                                }`}
-                                            onClick={() => toggleWishlist?.(card)}
+                                            className={`
+                                                    transition-all hover:text-yellow-300
+                                                    ${favorites[card.id]
+                                                    ? "fa-solid fa-star text-yellow-400"
+                                                    : "fa-regular fa-star text-gray-400"
+                                                }
+                                            `}
                                         ></i>
+                                    </button>
+                                )}
+                                {toggleWishlist && (
+                                    <i
+                                        className={`cursor-pointer transition-all ${wishlist?.[card.id]
+                                            ? "fa-solid fa-circle-check text-green-400 hover:text-green-800"
+                                            : "fa-solid fa-clipboard-list text-amber-800 hover:text-black"
+                                            }`}
+                                        onClick={() => toggleWishlist?.(card)}
+                                    ></i>
                                 )}
                                 <p className="text-xl">{card.name} - ({card.localId} / {card.set.cardCount.official})</p>
                             </div>

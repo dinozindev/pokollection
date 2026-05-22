@@ -43,15 +43,15 @@ export const useBinders = () => {
     };
 
     // retorna todos os binders + cartas
-    const fetchAllBindersWithCards = async (): Promise<BinderWithCards[]> => {
+    const fetchAllBindersWithCards = async (id: string): Promise<BinderWithCards[]> => {
         if (!user) return [];
 
-        const bindersRef = collection(db, "users", user.uid, "binders");
+        const bindersRef = collection(db, "users", id, "binders");
         const bindersSnap = await getDocs(bindersRef);
 
         const binders = await Promise.all(
             bindersSnap.docs.map(async (binderDoc) => {
-                const cartasRef = collection(db, "users", user.uid, "binders", binderDoc.id, "cartas");
+                const cartasRef = collection(db, "users", id, "binders", binderDoc.id, "cartas");
                 const cartasSnap = await getDocs(cartasRef);
 
                 const cartas = cartasSnap.docs.map(doc => doc.data() as CardUser);

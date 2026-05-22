@@ -15,28 +15,27 @@ import { useEffect } from "react"
 import { limparCacheExpirado, limparCacheMaisAntigo } from "./utils/storage"
 import WishList from "./pages/WishList/WishList"
 import Social from "./pages/Social/Social"
-import UserProfile from "./pages/UserProfile/UserProfile"
 
 const App = () => {
 
 
-useEffect(() => {
+  useEffect(() => {
     limparCacheExpirado();
     // verifica o uso do localStorage e limpa se estiver perto do limite
     const verificarLimite = () => {
-        const total = Object.keys(localStorage)
-            .filter(key => key.startsWith('@tcgdex-cache/'))
-            .reduce((acc, key) => acc + (localStorage.getItem(key)?.length || 0), 0);
+      const total = Object.keys(localStorage)
+        .filter(key => key.startsWith('@tcgdex-cache/'))
+        .reduce((acc, key) => acc + (localStorage.getItem(key)?.length || 0), 0);
 
-        const limiteAproximado = 4 * 1024 * 1024; // 4MB de segurança antes dos 5MB
+      const limiteAproximado = 4 * 1024 * 1024; // 4MB de segurança antes dos 5MB
 
-        if (total > limiteAproximado) {
-            limparCacheMaisAntigo();
-        }
+      if (total > limiteAproximado) {
+        limparCacheMaisAntigo();
+      }
     };
 
     verificarLimite();
-}, []);
+  }, []);
 
   return (
     <>
@@ -49,12 +48,17 @@ useEffect(() => {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/collection" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
-          <Route path="/wishlist" element={<ProtectedRoute><WishList/></ProtectedRoute>} />
+          <Route path="/collection/:id" element={<ProtectedRoute><Collection /></ProtectedRoute>} />
+          <Route path="/wishlist" element={<ProtectedRoute><WishList /></ProtectedRoute>} />
+          <Route path="/wishlist/:id" element={<ProtectedRoute><WishList /></ProtectedRoute>} />
           <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+          <Route path="/favorites/:id" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
           <Route path="/binders" element={<ProtectedRoute><Binders /></ProtectedRoute>} />
           <Route path="/binders/:id" element={<ProtectedRoute><BinderDetails /></ProtectedRoute>} />
+          <Route path="/profile/:id" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/profile/:userId/binders" element={<ProtectedRoute><Binders /></ProtectedRoute>} />
+          <Route path="/profile/:userId/binders/:binderId" element={<ProtectedRoute><BinderDetails /></ProtectedRoute>} />
           <Route path="/social" element={<ProtectedRoute><Social /></ProtectedRoute>} />
-          <Route path="/social/:id" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
     </>
