@@ -34,7 +34,7 @@ const CardDiv = ({ loadedImages, card, handleImageLoad, favorites, wishlist, tog
                         onClick={() => setCardPreview(false)}
                     ></div>
                     {/* Pop-up da carta individual */}
-                    <div className="relative bg-white w-[90%] max-w-md lg:max-w-3xl lg:w-[80%] p-4 rounded-2xl shadow-lg z-10 flex flex-col gap-4">
+                    <div className="relative bg-white w-[90%] max-w-md lg:max-w-3xl lg:w-[80%] p-4 rounded-2xl shadow-lg z-10 flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-1">
                                 {favorites && (

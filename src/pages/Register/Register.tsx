@@ -1,9 +1,8 @@
 import { useState } from "react"
 import type { User } from "../../types/type";
 import * as firebase from "firebase/auth";
-import { auth, db } from "../../firebase/firebase";
+import { auth } from "../../firebase/firebase";
 import { useNavigate } from "react-router-dom";
-import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const Register = () => {
 
@@ -38,21 +37,14 @@ const Register = () => {
 
             await firebase.sendEmailVerification(response.user);
 
-            await setDoc(doc(db, "users", response.user.uid), {
-                username: user.username,
-                email: user.email,
-                favoritePokemon: "",
-                avatar: "",
-                createdAt: serverTimestamp(),
-                bio: "",
-                favoriteType: "",
-                favoriteGen: ""
-            })
+            // desloga o usuário automaticamente
+            await auth.signOut();
 
             setAlert("Verifique seu e-mail para ativar sua conta.");
-            setTimeout(() => setAlert(""), 5000);
 
-            navigate("/cards");
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
 
         } catch (error: any) {
             console.error(error);
@@ -117,7 +109,7 @@ const Register = () => {
                     </button>
                 </div>
                 {alert && (
-                    <div className="fixed bg-white text-black px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl top-30">
+                    <div className="w-[65%] md:w-[35%] lg:w-[25%] text-center fixed top-30 left-1/2 -translate-x-1/2 bg-white text-black px-4 py-4 rounded-lg shadow-lg z-20 transition-all text-xl">
                         {alert}
                     </div>
                 )}

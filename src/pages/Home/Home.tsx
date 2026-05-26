@@ -16,7 +16,7 @@ const Home = () => {
     try {
       const cardsResume = await tcgdex.card.list(
         Query.create()
-          .contains('set.name', "Perfect Order")
+          .contains('set.name', "Chaos Rising")
       )
       const cardsList: any = await Promise.all(
         cardsResume.map(card => tcgdex.card.get(card.id))
