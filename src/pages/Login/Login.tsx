@@ -2,7 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import type { User } from "../../types/type";
 import { useState } from "react";
 import * as firebase from "firebase/auth";
-import { auth } from "../../firebase/firebase";
+import { auth, db } from "../../firebase/firebase";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 
 const Login = () => {
   const [user, setUser] = useState<User>({
@@ -42,8 +43,23 @@ const Login = () => {
         return;
       }
 
-      console.log(response.user);
+      const userRef = doc(db, "users", response.user.uid);
 
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          username: response.user.displayName || "",
+          email: response.user.email,
+          favoritePokemon: "",
+          avatar: "",
+          createdAt: serverTimestamp(),
+          bio: "",
+          favoriteType: "",
+          favoriteGen: ""
+        });
+      }
+      
       navigate("/cards", {
         state: { loggedIn: true }
       });
@@ -80,7 +96,7 @@ const Login = () => {
       await firebase.sendPasswordResetEmail(auth, user.email);
 
       setError("");
-      
+
       setAlert("E-mail de recuperação enviado. Verifique sua caixa de spam.");
       setTimeout(() => setAlert(""), 5000);
 
