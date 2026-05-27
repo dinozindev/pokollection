@@ -444,7 +444,7 @@ const Profile = () => {
                                     cursor-pointer transition-all
                                     ${isFollowing
                                     ? "bg-amber-800 text-white hover:text-amber-800 hover:bg-white"
-                                    : "bg-white text-amber-800 hover:bg-amber-800 hover:text-white"
+                                    : "bg-white border border-amber-800 text-amber-800 hover:bg-amber-800 hover:text-white"
                                 }
                             `}
                         >
